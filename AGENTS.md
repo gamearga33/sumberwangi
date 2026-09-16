@@ -5,6 +5,7 @@ File ini dibaca otomatis oleh Antigravity di awal setiap sesi kerja di repo ini.
 ## Dokumen Terkait (WAJIB dibaca juga)
 
 - **`SUMBER_WANGI_SPEC.md`** (di root repo yang sama) — berisi spesifikasi fitur lengkap: tech stack final, skema database, struktur halaman, alur WhatsApp, rencana deployment, dan batasan scope. Baca dokumen ini SEBELUM mulai coding apapun. File `AGENTS.md` ini hanya berisi aturan *cara kerja & standar kualitas*, bukan spesifikasi *apa yang dibangun* — dua-duanya harus dipatuhi bersamaan.
+- **`MIGRATION_NOTES.md`** (jika ada di root repo) — kalau file ini ada, artinya project sedang dalam proses migrasi dari stack lama ke stack baru yang dijelaskan di `SUMBER_WANGI_SPEC.md`. WAJIB dibaca dan diikuti sebelum mengubah kode terkait backend/database, supaya tidak ada data yang hilang atau langkah migrasi yang terlewat.
 
 ---
 

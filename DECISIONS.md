@@ -49,3 +49,22 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
   3. **Global Smooth Scroll:** Menambahkan `scroll-behavior: smooth` pada CSS global dan kelas `scroll-smooth` pada elemen `<html>` untuk pengalaman navigasi yang halus.
   4. **Penyesuaian Halaman Tentang Kami:** Menghapus ikon logo kecil di samping teks judul header `CV SUMBER WANGI MADIUN GROUP` dan mengganti foto parfum ilustrasi pada editorial story dengan logo resmi transparan.
 
+## 2026-09-16 — Migrasi Penuh Arsitektur Backend: PocketBase/Fly.io ke Supabase
+- **Keputusan:**
+  1. **Penyelamatan & Ekspor Data:** Mengekstrak dan menyelamatkan 100% data dari 11 varian parfum resmi di database SQLite PocketBase lokal (`pocketbase/pb_data/data.db`) ke format JSON terstruktur (`scripts/exported_products.json`) serta menyediakan skrip DDL & seed SQL (`scripts/schema.sql`, `scripts/seed.sql`, dan `scripts/seed-supabase.mjs`). Seluruh aset gambar parfum di `scripts/assets/` dan `public/images/products/` dipastikan utuh.
+  2. **Penggantian Dependency:** Menghapus package `pocketbase` dan menginstal package resmi `@supabase/supabase-js` (^2.116.0) dan `@supabase/ssr` (^0.12.7).
+  3. **Koneksi Supabase & Arsitektur SSR:**
+     - Membuat browser client (`lib/supabase/client.ts`) untuk interaksi client-side.
+     - Membuat server client (`lib/supabase/server.ts`) dengan cookie handler Next.js App Router.
+     - Membuat middleware auth (`middleware.ts` & `lib/supabase/middleware.ts`) untuk refresh token session dan proteksi rute admin (`/admin/*`).
+     - Membuat public client (`lib/supabase/public.ts`) untuk query data publik tanpa sentuhan cookie, sehingga kompatibel penuh dengan ISR (revalidate 60s) dan SSG `generateStaticParams`.
+  4. **Transisi Schema & Naming Convention:** Mengganti tipe data PocketBase (`image`, `created`, `updated`) menjadi konvensi Postgres/Supabase (`image_url`, `created_at`, `updated_at`) pada `lib/types.ts` dan fungsi query di `lib/products.ts`.
+  5. **Panel Admin Custom Next.js Lengkap:** Membangun antarmuka admin lengkap berbasis Tailwind CSS (estetika hitam obsidian & aksen emas artisanal):
+     - `/admin/login`: Login admin dengan Supabase Auth `signInWithPassword`.
+     - `/admin/dashboard`: Ringkasan statistik varian, tabel manajemen katalog, toggle instan ketersediaan stok & varian unggulan beranda, aksi hapus permanen, dan tombol logout.
+     - `/admin/produk/baru`: Form input varian dengan auto-generate slug, validasi field terperinci, dan upload foto langsung ke Supabase Storage bucket `product-images`.
+     - `/admin/produk/[id]/edit`: Form edit varian untuk mengubah harga, deskripsi, status, dan pembaruan foto opsional.
+  6. **Pengarsipan File Lama:** Memindahkan seluruh file deployment Fly.io dan binary PocketBase lama (`pocketbase-deploy/`, `pocketbase/`, `scripts/setup-db.js`) ke folder arsip `_archive/`.
+- **Alasan:** Fly.io telah menghapus tier gratis permanen (kebijakan baru mewajibkan pembayaran bulanan), sementara Render gratis tidak memiliki persistent disk (berisiko menghapus data SQLite dan foto setiap kali redeploy). Supabase menyediakan database Postgres dan Object Storage terkelola yang aman permanen di free tier tanpa risiko data hilang saat redeploy.
+
+
