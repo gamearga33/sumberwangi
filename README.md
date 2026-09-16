@@ -44,7 +44,7 @@ sumberwangi/
 │   └── globals.css                   # Tailwind theme styling
 ├── components/
 │   ├── Navbar.tsx                    # Header responsif dengan logo resmi
-│   ├── Footer.tsx                    # Footer lengkap dengan link navigasi & panel admin
+│   ├── Footer.tsx                    # Footer lengkap dengan link navigasi & kontak resmi
 │   ├── ProductCard.tsx               # Kartu parfum Black & Gold & tombol pesan WA
 │   ├── WhatsAppButton.tsx            # Tombol pesanan & konsultasi wa.me
 │   ├── LoadingSkeleton.tsx           # Komponen skeleton placeholder

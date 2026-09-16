@@ -129,3 +129,7 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
      - Menghapus keterangan *"Pembayaran via QRIS"* pada halaman detail produk, digantikan dengan *"Pemesanan diproses langsung oleh tim Sumber Wangi melalui WhatsApp"*.
      - Menghapus poin *"Pembayaran praktis via QRIS"* pada footer, digantikan dengan *"Pemesanan cepat & mudah via WhatsApp"*.
 - **Alasan:** Memenuhi instruksi langsung dari owner untuk menyederhanakan pengalaman belanja pengunjung (semua varian disatukan tanpa pemisahan gender) serta mengarahkan alur konfirmasi transaksi sepenuhnya melalui komunikasi personal WhatsApp resmi Sumber Wangi.
+
+## 2026-09-16 — Penyembunyian Akses Panel Admin dari Navigasi Publik
+- **Keputusan:** Menghapus tautan rute `/admin/dashboard` dari navigasi footer publik (`components/Footer.tsx`). Panel admin kini hanya dapat diakses dengan mengetikkan URL secara manual pada browser (`/admin` atau `/admin/login`).
+- **Alasan:** Memenuhi permintaan owner untuk privasi dan keamanan ekstra agar antarmuka panel admin tidak terpampang atau dapat diakses langsung oleh pengunjung umum melalui klik tautan di website.
