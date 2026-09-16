@@ -19,13 +19,18 @@ export async function updateSession(request: NextRequest) {
     supabaseAnonKey === 'placeholder-anon-key' ||
     !process.env.NEXT_PUBLIC_SUPABASE_URL;
 
-  const isAccessingAdmin = request.nextUrl.pathname.startsWith('/admin');
-  const isLoginPage = request.nextUrl.pathname === '/admin/login';
+  const normalizedPath = request.nextUrl.pathname.replace(/\/+$/, '') || '/';
+  const isAccessingAdmin = normalizedPath === '/admin' || normalizedPath.startsWith('/admin/');
+  const isLoginPage = normalizedPath === '/admin/login';
+
+  // Jika bukan rute admin, kembalikan response langsung tanpa memanggil auth API Supabase
+  if (!isAccessingAdmin) {
+    return supabaseResponse;
+  }
 
   if (isPlaceholderConfig) {
     if (isAccessingAdmin && !isLoginPage) {
-      const url = request.nextUrl.clone();
-      url.pathname = '/admin/login';
+      const url = new URL('/admin/login', request.url);
       return NextResponse.redirect(url);
     }
     return supabaseResponse;
@@ -48,15 +53,24 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  // Wajib panggil getUser() untuk me-refresh token session
+  // Wajib panggil getUser() untuk me-refresh token session rute admin
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Jika mengakses /admin atau /admin/ secara langsung, arahkan ke dashboard jika login atau login jika belum
+  if (normalizedPath === '/admin') {
+    const url = new URL(user ? '/admin/dashboard' : '/admin/login', request.url);
+    const redirectResponse = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value);
+    });
+    return redirectResponse;
+  }
+
   // Proteksi route admin
   if (isAccessingAdmin && !isLoginPage && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/admin/login';
+    const url = new URL('/admin/login', request.url);
     const redirectResponse = NextResponse.redirect(url);
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       redirectResponse.cookies.set(cookie.name, cookie.value);
@@ -66,8 +80,7 @@ export async function updateSession(request: NextRequest) {
 
   // Jika sudah login tapi mengakses /admin/login, redirect ke dashboard
   if (isLoginPage && user) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/admin/dashboard';
+    const url = new URL('/admin/dashboard', request.url);
     const redirectResponse = NextResponse.redirect(url);
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       redirectResponse.cookies.set(cookie.name, cookie.value);

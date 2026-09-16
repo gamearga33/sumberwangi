@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://sumberwangi.vercel.app'
+  ),
   title: 'Sumber Wangi Madiun Group — Artisanal Perfumery',
   description:
     'CV Sumber Wangi Madiun Group — Parfum artisanal dengan konsentrasi bibit wewangian murni berkarakter mewah dan tahan hingga 14+ jam.',

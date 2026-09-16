@@ -212,6 +212,7 @@ async function seed() {
         .from('product-images')
         .upload(storageFilename, fileBuffer, {
           contentType: 'image/jpeg',
+          cacheControl: '31536000',
           upsert: true,
         });
 

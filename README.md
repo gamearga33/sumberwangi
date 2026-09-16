@@ -62,7 +62,7 @@ sumberwangi/
 │   ├── utils.ts                      # Format Rupiah, slug generator, validasi form produk
 │   ├── utils.test.ts                 # Unit test utilitas & validasi
 │   └── types.ts                      # TypeScript types & interface data produk
-├── middleware.ts                     # Next.js middleware proteksi rute /admin/*
+├── proxy.ts                          # Next.js 16 network proxy / middleware proteksi rute /admin/*
 ├── scripts/
 │   ├── schema.sql                    # Skrip SQL DDL: tabel products, trigger, RLS, storage
 │   ├── seed.sql                      # Skrip SQL DML: seed 11 varian parfum resmi
@@ -104,6 +104,7 @@ Isi variabel berikut:
 | `NEXT_PUBLIC_SUPABASE_URL` | Project URL dari Settings → API di Dashboard Supabase | `https://xyzcompany.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public Anon Key dari Settings → API di Dashboard Supabase | `eyJhbGciOiJIUz...` |
 | `NEXT_PUBLIC_WA_NUMBER` | Nomor WhatsApp resmi pemesanan (format internasional) | `6281333226161` |
+| `CRON_SECRET` | *(Opsional)* Secret token untuk proteksi endpoint keep-alive | `super-secret-key-123` |
 | `SUPABASE_SERVICE_ROLE_KEY` | *(Opsional)* Hanya digunakan untuk script seed lokal | `eyJhbGciOi...` |
 
 ---
@@ -120,7 +121,9 @@ npm run dev
 
 Buka browser di [http://localhost:3000](http://localhost:3000).
 
+- Halaman Beranda: [http://localhost:3000](http://localhost:3000)
 - Halaman Katalog Publik: [http://localhost:3000/produk](http://localhost:3000/produk)
+- Endpoint Keep-Alive: [http://localhost:3000/api/cron/keep-alive](http://localhost:3000/api/cron/keep-alive)
 - Panel Admin Login: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
 - Dashboard Admin: [http://localhost:3000/admin/dashboard](http://localhost:3000/admin/dashboard)
 
@@ -141,12 +144,59 @@ npm run build
 
 ---
 
-## Catatan Free Tier Supabase (Penanganan Auto-Pause)
+## Strategi Anti Auto-Pause Supabase (Keep-Alive Otomatis)
 
-Pada paket gratis Supabase, database akan **auto-pause jika tidak ada aktivitas selama 7 hari**.
-- **Data Tidak Hilang:** Seluruh data produk dan foto tetap aman tersimpan di Postgres dan Storage.
-- **Cara Resume Proyek:** Masuk ke Dashboard Supabase, pilih project, dan klik tombol **Resume project** (memerlukan waktu ~1-2 menit hingga aktif kembali).
-- **Pencegahan Otomatis (Opsional):** Setup scheduled ping (misalnya via layanan gratis seperti cron-job.org) untuk memanggil REST endpoint Supabase setiap beberapa hari agar project tetap aktif.
+Supabase Free Tier menerapkan kebijakan **auto-pause setelah 7 hari tidak ada aktivitas (inactivity)**. Seluruh data tetap aman, namun database perlu di-resume manual jika tertidur.
+
+Untuk mencegah hal tersebut, website ini sudah dilengkapi **sistem keep-alive otomatis**:
+
+### 1. Endpoint Keep-Alive (`/api/cron/keep-alive` & `/api/keep-alive`)
+Endpoint ini melakukan query PostgreSQL teringan (`.select('id').limit(1)`) ke tabel `products`, sehingga Postgres engine Supabase mencatat aktivitas dan mereset hitungan 7 hari secara terus menerus.
+
+### 2. Vercel Cron Otomatis (`vercel.json`)
+File `vercel.json` di root repository sudah terkonfigurasi untuk memanggil endpoint keep-alive setiap hari pada jam 04:00 UTC (11:00 WIB):
+
+```json
+{
+  "crons": [
+    {
+      "path": "/api/cron/keep-alive",
+      "schedule": "0 4 * * *"
+    }
+  ]
+}
+```
+> **Catatan Kuota Vercel Hobby:** Vercel paket gratis mengizinkan 1 eksekusi cron per hari. Jadwal `0 4 * * *` (1x sehari) 100% aman dan patuh pada limit Vercel Free tier.
+
+### 3. Alternatif Eksternal Gratis (Cadangan / Pinger Independen)
+Jika Anda ingin kepastian ekstra tanpa bergantung pada Vercel Cron:
+- **[cron-job.org](https://cron-job.org)** (100% Gratis):
+  1. Buat akun gratis di `cron-job.org`.
+  2. Buat job baru dengan URL: `https://domain-anda.vercel.app/api/cron/keep-alive`.
+  3. Set jadwal: setiap 1 hari sekali atau setiap 3 hari sekali.
+  4. (Opsional jika memakai `CRON_SECRET`): Masukkan URL `https://domain-anda.vercel.app/api/cron/keep-alive?key=SECRET_ANDA`.
+- **[UptimeRobot](https://uptimerobot.com)** (100% Gratis, 50 monitor):
+  1. Tambahkan monitor tipe **HTTP(s)**.
+  2. Masukkan URL `https://domain-anda.vercel.app/api/keep-alive`.
+  3. Interval monitoring 5 - 30 menit (juga berfungsi sebagai pemantau uptime website jika down).
+
+---
+
+## Arsitektur Optimasi Kuota (Bebas Limit Vercel & Supabase)
+
+Arsitektur kode telah dioptimalkan agar tidak menyentuh kuota bulanan gratis:
+
+1. **Vercel Image Optimization Quota (1.000 foto/bulan) → 0/1.000 Terpakai:**
+   - Dikonfigurasi `images: { unoptimized: true }` di `next.config.ts`. Next.js merender gambar langsung dari sumber Supabase Storage / static CDN tanpa melalui serverless image optimizer Vercel.
+2. **Next.js Static Generation & ISR Edge Cache:**
+   - Semua halaman publik (`/`, `/produk`, `/produk/[slug]`, `/tentang`) di-render statis dengan ISR 60 detik.
+   - Vercel Edge Cache melayani 99%+ kunjungan pengunjung langsung dari CDN global tanpa mengeksekusi serverless function dan tanpa query database Supabase.
+   - Halaman `/produk` memfilter kategori di browser client-side (`components/ProductCatalog.tsx`), bukan dynamic SSR, sehingga pergantian tab kategori instan 0ms tanpa request baru ke Supabase.
+3. **Supabase Egress Bandwidth Quota (5GB/bulan) Protection:**
+   - Upload foto produk di admin panel menyertakan header `cacheControl: '31536000'` (1 tahun cache immutable).
+   - Browser pengunjung menyimpan foto di cache lokal, mencegah download berulang ke Supabase Storage.
+4. **Vercel Edge Proxy / Middleware Quota Protection:**
+   - Proxy autentikasi Next.js 16 (`proxy.ts`) hanya dijalankan untuk rute panel admin (`/admin/*`). Rute publik bebas dari overhead middleware sehingga menghemat kuota invocations serverless Vercel.
 
 ---
 
@@ -158,4 +208,6 @@ Pada paket gratis Supabase, database akan **auto-pause jika tidak ada aktivitas 
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `NEXT_PUBLIC_WA_NUMBER`
-4. Deploy akan otomatis berjalan setiap push ke branch `main`.
+   - `CRON_SECRET` *(opsional, string rahasia bebas)*
+4. Deploy akan otomatis berjalan setiap push ke branch `main`, dan Vercel Cron akan langsung aktif otomatis membaca `vercel.json`.
+

@@ -104,6 +104,7 @@ export default function TambahProdukBaruPage() {
         .from('product-images')
         .upload(storagePath, imageFile, {
           contentType: imageFile.type,
+          cacheControl: '31536000',
           upsert: true,
         });
 

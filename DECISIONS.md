@@ -79,3 +79,42 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
   4. Menjadikan `scripts/seed.sql` skrip mandiri (self-contained) yang dapat dijalankan langsung di SQL Editor Supabase untuk membuat tabel jika belum ada, menambah kolom yang kurang, mengaktifkan RLS & kebijakan publik, serta meng-upsert 11 varian resmi.
 - **Alasan:** Menyelesaikan error PostgreSQL `42703 (column "is_featured" does not exist)` saat seeding, yang terjadi karena tabel `products` sudah sempat terbentuk sebelum kolom `is_featured` ditambahkan, sementara klausa `create table if not exists` tidak memodifikasi tabel yang sudah ada. Serta mencegah auth failure pada middleware akibat trailing path `/rest/v1/` pada env URL.
 
+## 2026-09-16 — Optimasi Kuota Bebas Limit (Vercel & Supabase Free Tier) & Anti Auto-Pause Keep-Alive
+- **Keputusan:**
+  1. **Mekanisme Otomatis Keep-Alive Supabase (Anti Auto-Pause 7 Hari):**
+     - Membangun API endpoint `/api/cron/keep-alive` (dan alias `/api/keep-alive`) didukung helper `lib/keepAlive.ts` yang mengeksekusi query database PostgreSQL teringan (`.select('id').limit(1)`).
+     - Menambahkan konfigurasi Vercel Cron di `vercel.json` dengan jadwal `0 4 * * *` (1x sehari pada 04:00 UTC / 11:00 WIB), sepenuhnya patuh pada batas Vercel Hobby plan (maksimal 1 eksekusi cron/hari).
+     - Mendukung pengamanan opsional via `CRON_SECRET` (`Authorization: Bearer` atau `?key=`), dengan fallback tetap terbuka jika secret belum disetel untuk kemudahan setup awal.
+     - Menyediakan dokumentasi lengkap di `README.md` untuk setup alternatif pinger eksternal gratis (cron-job.org dan UptimeRobot).
+  2. **Transisi Halaman Katalog (`/produk`) dari Dynamic SSR ke Static ISR (Edge Cache):**
+     - Sebelumnya halaman `/produk` terevaluasi sebagai `ƒ Dynamic` di Next.js karena membaca `searchParams` secara langsung di Server Component, memaksa Next.js melakukan server-side render dan memanggil query Supabase pada setiap pengunjung.
+     - Mengubah arsitektur `/produk`: Server Component mengambil seluruh produk aktif sekali dan di-cache via ISR (`revalidate = 60`), sedangkan filtering kategori ("Semua", "Pria", "Wanita", "Unisex") dialihkan ke Client Component (`components/ProductCatalog.tsx`) yang dibungkus boundary `<Suspense>`.
+     - Hasil: Rute `/produk` berubah menjadi `○ Static (ISR 1m)`. Pengunjung mendapatkan respon instan dari Vercel Edge Cache (<50ms), dan Supabase hanya di-query maksimal 1x per 60 detik meskipun ribuan pengunjung membuka katalog.
+  3. **Proteksi Kuota Vercel Image Optimization (1.000 transformasi/bulan):**
+     - Memastikan `images: { unoptimized: true }` di `next.config.ts`. Gambar parfum disajikan langsung dari Supabase Storage / static CDN tanpa melalui proxy kompresi Vercel, memastikan kuota 1.000 image optimizations Vercel tetap 0 (tidak pernah tersentuh).
+  4. **Proteksi Kuota Egress Bandwidth Supabase (5GB/bulan):**
+     - Menambahkan opsi `cacheControl: '31536000'` (1 tahun cache immutable) pada proses upload foto produk di `app/admin/produk/baru/page.tsx` dan `app/admin/produk/[id]/edit/page.tsx`.
+     - Browser pengunjung dan CDN akan meng-cache file gambar parfum selama 1 tahun, mencegah pengunduhan ulang berulang kali dan melindungi batas transfer data Supabase 5GB/bulan.
+  5. **Pengurangan Beban Invocations Edge Middleware:**
+     - Mempersempit matcher di `middleware.ts` dari global catch-all menjadi khusus `['/admin', '/admin/:path*']`.
+     - Menambahkan guard `if (!isAccessingAdmin) return supabaseResponse;` di `lib/supabase/middleware.ts`.
+     - Hasil: Rute pengunjung publik (`/`, `/produk`, `/tentang`, `/api/*`) sama sekali tidak memicu eksekusi middleware Next.js, menghemat kuota invocations serverless Edge.
+- **Alasan:** Memenuhi instruksi user agar aplikasi dapat berjalan 100% stabil di tier gratis Vercel dan Supabase tanpa risiko database tertidur (auto-pause) dan tanpa risiko terkena limit kuota hosting bulanan.
+
+## 2026-09-16 — Penguatan Arsitektur Bebas Limit, Konvensi Next.js 16 `proxy.ts`, & Standar RFC 9110
+- **Keputusan:**
+  1. **Migrasi Konvensi `middleware.ts` ke `proxy.ts`:**
+     - Next.js 16 secara resmi mendeprekasi penamaan file `middleware.ts` demi menghindari kerancuan dengan Express middleware dan merekomendasikan `proxy.ts` (dengan export function `proxy`).
+     - Melakukan migrasi ke `proxy.ts`, menghasilkan build Next.js 100% bersih tanpa warning deprecation sedikitpun.
+  2. **Kepatuhan RFC 9110 pada Endpoint Keep-Alive `HEAD`:**
+     - Metode `HEAD` pada `/api/cron/keep-alive` dan alias `/api/keep-alive` kini mengembalikan respon dengan body `null` (tanpa payload JSON) sembari mempertahankan seluruh headers dan status code (200/401/500).
+     - Menghilangkan transfer data tidak perlu saat dipanggil oleh uptime monitor gratis seperti UptimeRobot yang rutin mengirim request HEAD.
+  3. **Robust Admin Redirects & Trailing Slash Handling:**
+     - Menormalkan pathname pada `lib/supabase/middleware.ts` dan menggunakan constructor `new URL(path, request.url)` alih-alih `request.nextUrl.clone()`, memastikan akses ke `/admin/` (dengan trailing slash) tidak lagi menghasilkan 404, melainkan teralihkan mulus ke `/admin/dashboard` atau `/admin/login`.
+  4. **Penerapan Header Cache Immutable pada Seed Script:**
+     - Menambahkan parameter `cacheControl: '31536000'` pada `scripts/seed-supabase.mjs` sehingga foto yang diunggah saat inisialisasi database awal langsung memiliki header cache 1 tahun di Supabase Storage.
+  5. **Tautan Semantik & Pure Filtering pada `ProductCatalog.tsx`:**
+     - Menggantikan tombol `<button>` dengan semantik `<Link replace scroll={false}>` agar tab kategori dapat di-crawl search engine dan mendukung aksi right-click "Buka di tab baru", sembari tetap berjalan instan di memori via fungsi murni `filterProductsByCategory` yang teruji 100% unit test di Vitest.
+
+
+

@@ -200,3 +200,25 @@ export async function getProductBySlug(slug: string): Promise<{
     };
   }
 }
+
+/**
+ * Menyaring daftar produk berdasarkan kategori secara aman di memori (client-side).
+ * Menangani case-insensitivity, spasi, dan nilai null/undefined.
+ */
+export function filterProductsByCategory(
+  products?: Product[] | null,
+  category?: string | null
+): Product[] {
+  if (!products || !Array.isArray(products)) {
+    return [];
+  }
+
+  if (!category || category.trim().toLowerCase() === 'semua') {
+    return products;
+  }
+
+  const targetCategory = category.trim().toLowerCase();
+  return products.filter(
+    (product) => product.category?.trim().toLowerCase() === targetCategory
+  );
+}
