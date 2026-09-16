@@ -13,6 +13,7 @@ export interface Product {
   image_gallery?: string[];
   category?: ProductCategory;
   is_available: boolean;
+  is_featured?: boolean;
   created: string;
   updated: string;
 }
@@ -25,6 +26,7 @@ export interface ProductFormData {
   size_ml?: number;
   category?: ProductCategory;
   is_available: boolean;
+  is_featured?: boolean;
   image?: File | null;
   image_gallery?: File[];
 }

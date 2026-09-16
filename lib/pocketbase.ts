@@ -84,19 +84,29 @@ export async function getAvailableProducts(category?: string): Promise<{
 }
 
 /**
- * Fetch produk unggulan untuk Homepage (maksimal 4 produk)
+ * Fetch produk unggulan / populer untuk Homepage (berdasarkan is_featured = true yang dipilih manual oleh owner)
  */
-export async function getFeaturedProducts(limit = 4): Promise<{
+export async function getFeaturedProducts(limit = 8): Promise<{
   data: Product[];
   error: string | null;
 }> {
   try {
     const client = getPocketBaseClient();
-    const records = await client.collection('products').getList<Product>(1, limit, {
-      filter: 'is_available = true',
+    // 1. Coba ambil produk yang dipilih manual sebagai unggulan/populer
+    let records = await client.collection('products').getList<Product>(1, limit, {
+      filter: 'is_available = true && is_featured = true',
       sort: '-created',
       requestKey: null,
     });
+
+    // 2. Fallback: jika belum ada produk yang dicentang is_featured, tampilkan produk aktif terbaru
+    if (records.items.length === 0) {
+      records = await client.collection('products').getList<Product>(1, limit, {
+        filter: 'is_available = true',
+        sort: '-created',
+        requestKey: null,
+      });
+    }
 
     return {
       data: records.items,
