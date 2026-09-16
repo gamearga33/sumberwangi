@@ -70,3 +70,10 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
 ## 2026-09-16 — Strategi Penanganan Auto-Pause 7 Hari Supabase Free Tier
 - **Keputusan:** Memilih **Opsi 2** (menerima mekanisme auto-pause free tier dengan panduan resume manual 1-klik di Dashboard Supabase pada `README.md`) serta menyediakan rekomendasi opsi setup scheduled ping gratis via `cron-job.org` bagi owner jika ingin project tetap terjaga aktif tanpa intervensi manual.
 - **Alasan:** Sesuai mandat `SUMBER_WANGI_SPEC.md` Bagian 2. Berbeda dari risiko ephemeral disk pada Render (yang menghapus permanen seluruh data dan foto saat restart), fitur auto-pause Supabase 100% menjamin integritas data (Postgres database dan file Storage tetap utuh dan aman). Untuk skala bisnis <20 varian parfum dan traffic awal, resume manual membutuhkan waktu kurang dari 1 menit, sehingga tidak membebani operasional owner.
+
+## 2026-09-16 — Konfigurasi Live Supabase & Migrasi Idempotent Kolom `is_featured`
+- **Keputusan:**
+  1. Mengisi `.env.local` dengan kredensial live Supabase project owner (`NEXT_PUBLIC_SUPABASE_URL` dan `NEXT_PUBLIC_SUPABASE_ANON_KEY`), disertai fungsi normalisasi URL otomatis (`cleanSupabaseUrl`) di seluruh client Supabase (`client.ts`, `server.ts`, `public.ts`, dan `seed-supabase.mjs`) untuk menangani suffix `/rest/v1/` atau trailing slashes secara aman.
+  2. Memperbarui `scripts/schema.sql` dan `scripts/seed.sql` dengan DDL penambahan kolom yang idempotent (`alter table products add column if not exists is_featured ...`), serta menyediakan `scripts/fix-is-featured.sql`.
+- **Alasan:** Menyelesaikan error PostgreSQL `42703 (column "is_featured" does not exist)` saat seeding, yang terjadi karena tabel `products` sudah sempat terbentuk sebelum kolom `is_featured` ditambahkan, sementara klausa `create table if not exists` tidak memodifikasi tabel yang sudah ada.
+

@@ -20,6 +20,13 @@ create table if not exists products (
   updated_at timestamptz not null default now()
 );
 
+-- Pastikan seluruh kolom yang dibutuhkan sudah ada jika tabel sudah terlanjur dibuat sebelumnya
+alter table products add column if not exists is_featured boolean not null default false;
+alter table products add column if not exists image_gallery_urls text[];
+alter table products add column if not exists size_ml integer;
+alter table products add column if not exists category text;
+alter table products add column if not exists is_available boolean not null default true;
+
 -- 2. Trigger auto-update timestamp updated_at
 create or replace function update_updated_at_column()
 returns trigger as $$

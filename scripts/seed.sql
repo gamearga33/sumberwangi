@@ -3,6 +3,14 @@
 -- Jalankan skrip ini pada SQL Editor di Dashboard Supabase setelah menjalankan schema.sql
 -- ==============================================================================
 
+-- 1. Pastikan kolom is_featured dan kolom pendukung lainnya sudah ada jika tabel sudah terlanjur dibuat
+alter table if exists products add column if not exists is_featured boolean not null default false;
+alter table if exists products add column if not exists image_gallery_urls text[];
+alter table if exists products add column if not exists size_ml integer;
+alter table if exists products add column if not exists category text;
+alter table if exists products add column if not exists is_available boolean not null default true;
+
+-- 2. Masukkan / perbarui 11 varian resmi Sumber Wangi
 insert into products (name, slug, description, price, size_ml, image_url, category, is_available, is_featured)
 values
   (
