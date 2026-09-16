@@ -35,7 +35,7 @@ function loadEnvLocal() {
 loadEnvLocal();
 
 const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseUrl = rawUrl ? rawUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '') : rawUrl;
+const supabaseUrl = rawUrl ? rawUrl.trim().replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '') : rawUrl;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const adminEmail = process.env.ADMIN_EMAIL;
@@ -196,6 +196,9 @@ async function seed() {
     );
   }
 
+  let successCount = 0;
+  let failCount = 0;
+
   for (const item of productsData) {
     let finalImageUrl = `/images/products/${item.imageFile}`;
 
@@ -240,13 +243,22 @@ async function seed() {
     );
 
     if (upsertErr) {
+      failCount++;
       console.error(`❌ Gagal menyimpan produk ${item.name}:`, upsertErr.message);
     } else {
+      successCount++;
       console.log(`✨ Produk ${item.name} berhasil disimpan ke database.`);
     }
   }
 
-  console.log('[seed-supabase] Seluruh 11 varian parfum Sumber Wangi selesai diproses.');
+  if (failCount > 0) {
+    console.error(`\n⚠️ Selesai dengan ${failCount} kegagalan dari ${productsData.length} produk.`);
+    console.error('Penyebab umum: RLS menolak akses anon INSERT atau kolom is_featured belum ada di database Supabase.');
+    console.error('Solusi terbaik: Buka SQL Editor di Dashboard Supabase dan jalankan scripts/seed.sql (bypasses RLS & otomatis menambahkan kolom).');
+    process.exit(1);
+  } else {
+    console.log(`\n🎉 Seluruh ${successCount} varian parfum Sumber Wangi berhasil disimpan ke Supabase.`);
+  }
 }
 
 seed().catch((err) => {

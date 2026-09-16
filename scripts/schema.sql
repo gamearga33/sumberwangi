@@ -21,11 +21,12 @@ create table if not exists products (
 );
 
 -- Pastikan seluruh kolom yang dibutuhkan sudah ada jika tabel sudah terlanjur dibuat sebelumnya
-alter table products add column if not exists is_featured boolean not null default false;
-alter table products add column if not exists image_gallery_urls text[];
-alter table products add column if not exists size_ml integer;
-alter table products add column if not exists category text;
-alter table products add column if not exists is_available boolean not null default true;
+alter table if exists products add column if not exists is_featured boolean not null default false;
+alter table if exists products add column if not exists image_gallery_urls text[];
+alter table if exists products add column if not exists size_ml integer;
+alter table if exists products add column if not exists category text;
+alter table if exists products add column if not exists is_available boolean not null default true;
+create unique index if not exists products_slug_idx on products (slug);
 
 -- 2. Trigger auto-update timestamp updated_at
 create or replace function update_updated_at_column()
@@ -85,3 +86,6 @@ drop policy if exists "Authenticated users can delete product images" on storage
 create policy "Authenticated users can delete product images"
 on storage.objects for delete
 using (bucket_id = 'product-images' and auth.role() = 'authenticated');
+
+-- 5. Muat ulang cache schema PostgREST
+notify pgrst, 'reload schema';

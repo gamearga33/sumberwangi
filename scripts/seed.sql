@@ -1,16 +1,46 @@
 -- ==============================================================================
 -- SEED DATA 11 VARIAN PARFUM RESMI SUMBER WANGI
--- Jalankan skrip ini pada SQL Editor di Dashboard Supabase setelah menjalankan schema.sql
+-- Jalankan skrip ini pada SQL Editor di Dashboard Supabase:
+-- https://supabase.com/dashboard/project/ghosopesjhwxqkafnsrf/sql/new
+-- Skrip ini sepenuhnya idempotent & aman dijalankan berulang kali.
 -- ==============================================================================
 
--- 1. Pastikan kolom is_featured dan kolom pendukung lainnya sudah ada jika tabel sudah terlanjur dibuat
+-- 1. Pastikan tabel products sudah ada jika schema.sql belum dijalankan
+create table if not exists products (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null unique,
+  description text not null,
+  price integer not null check (price > 0),
+  size_ml integer,
+  image_url text not null,
+  image_gallery_urls text[],
+  category text,
+  is_available boolean not null default true,
+  is_featured boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- 2. Pastikan kolom is_featured dan kolom pendukung lainnya sudah ada jika tabel sudah terlanjur dibuat
 alter table if exists products add column if not exists is_featured boolean not null default false;
 alter table if exists products add column if not exists image_gallery_urls text[];
 alter table if exists products add column if not exists size_ml integer;
 alter table if exists products add column if not exists category text;
 alter table if exists products add column if not exists is_available boolean not null default true;
 
--- 2. Masukkan / perbarui 11 varian resmi Sumber Wangi
+-- 3. Pastikan unique index pada slug ada agar klausa ON CONFLICT (slug) selalu berhasil
+create unique index if not exists products_slug_idx on products (slug);
+
+-- 4. Aktifkan Row Level Security (RLS) dan pastikan kebijakan select publik aktif
+alter table products enable row level security;
+
+drop policy if exists "Public can view available products" on products;
+create policy "Public can view available products"
+on products for select
+using (is_available = true);
+
+-- 5. Masukkan / perbarui 11 varian resmi Sumber Wangi
 insert into products (name, slug, description, price, size_ml, image_url, category, is_available, is_featured)
 values
   (
@@ -144,3 +174,6 @@ on conflict (slug) do update set
   is_available = excluded.is_available,
   is_featured = excluded.is_featured,
   updated_at = now();
+
+-- 6. Muat ulang cache schema PostgREST
+notify pgrst, 'reload schema';

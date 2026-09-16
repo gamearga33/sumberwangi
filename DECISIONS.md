@@ -73,7 +73,9 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
 
 ## 2026-09-16 — Konfigurasi Live Supabase & Migrasi Idempotent Kolom `is_featured`
 - **Keputusan:**
-  1. Mengisi `.env.local` dengan kredensial live Supabase project owner (`NEXT_PUBLIC_SUPABASE_URL` dan `NEXT_PUBLIC_SUPABASE_ANON_KEY`), disertai fungsi normalisasi URL otomatis (`cleanSupabaseUrl`) di seluruh client Supabase (`client.ts`, `server.ts`, `public.ts`, dan `seed-supabase.mjs`) untuk menangani suffix `/rest/v1/` atau trailing slashes secara aman.
-  2. Memperbarui `scripts/schema.sql` dan `scripts/seed.sql` dengan DDL penambahan kolom yang idempotent (`alter table products add column if not exists is_featured ...`), serta menyediakan `scripts/fix-is-featured.sql`.
-- **Alasan:** Menyelesaikan error PostgreSQL `42703 (column "is_featured" does not exist)` saat seeding, yang terjadi karena tabel `products` sudah sempat terbentuk sebelum kolom `is_featured` ditambahkan, sementara klausa `create table if not exists` tidak memodifikasi tabel yang sudah ada.
+  1. Mengisi `.env.local` dengan kredensial live Supabase project owner (`NEXT_PUBLIC_SUPABASE_URL` dan `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
+  2. Menyediakan fungsi normalisasi URL terpusat (`cleanSupabaseUrl`, `getSupabaseUrl`, `getSupabaseAnonKey`) di `lib/supabase/utils.ts` yang menangani pembersihan whitespace, trailing slashes, dan suffix `/rest/v1/`, dan menggunakannya di seluruh Supabase client termasuk `middleware.ts` (`updateSession`).
+  3. Memperbarui `scripts/schema.sql`, `scripts/seed.sql`, dan `scripts/fix-is-featured.sql` dengan DDL penambahan kolom yang idempotent (`alter table if exists products add column if not exists ...`), unique index pada `slug`, dan perintah `notify pgrst, 'reload schema';` untuk sinkronisasi seketika schema cache PostgREST.
+  4. Menjadikan `scripts/seed.sql` skrip mandiri (self-contained) yang dapat dijalankan langsung di SQL Editor Supabase untuk membuat tabel jika belum ada, menambah kolom yang kurang, mengaktifkan RLS & kebijakan publik, serta meng-upsert 11 varian resmi.
+- **Alasan:** Menyelesaikan error PostgreSQL `42703 (column "is_featured" does not exist)` saat seeding, yang terjadi karena tabel `products` sudah sempat terbentuk sebelum kolom `is_featured` ditambahkan, sementara klausa `create table if not exists` tidak memodifikasi tabel yang sudah ada. Serta mencegah auth failure pada middleware akibat trailing path `/rest/v1/` pada env URL.
 
