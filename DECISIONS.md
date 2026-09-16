@@ -35,3 +35,10 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
   1. **11 Varian Parfum Resmi:** Memperbarui database produk dengan 11 varian resmi dari kode HTML owner (Romanwish, Bulgari Aqua, Nagita, Vanilla Ice, Melati Keraton, Harajuku Love, Sakura, Avril, Shisi, JLO Still, Dunhill Blue) dengan harga seragam Rp20.000 dan ukuran 35ml.
   2. **Hero Image Logo:** Mengganti foto hero banner beranda menjadi display logo resmi CV Sumber Wangi Madiun Group dengan latar belakang obsidian dark dan gold accent frame.
 - **Alasan:** Memastikan katalog produk, harga, dan visual branding di website 100% akurat dengan operasional komersial dan materi promosi CV Sumber Wangi Madiun Group saat ini.
+
+## 2026-09-16 — Logo Hero Transparan & Sistem Pemilihan Manual Varian Populer
+- **Keputusan:**
+  1. **Logo Hero Transparan Tanpa Kotak:** Menghapus wrapper card box (`bg-[#141414]`, `border border-[#262420]`) pada tampilan logo di hero section, sehingga botol emas dan tipografi logo resmi Sumber Wangi melayang alami dengan latar belakang transparan murni langsung di atas background beranda.
+  2. **Field `is_featured` untuk Pemilihan Manual Varian Populer:** Menambahkan kolom `is_featured` bertipe Boolean pada koleksi database PocketBase `products`. Fungsi `getFeaturedProducts` memprioritaskan produk dengan `is_available = true && is_featured = true`.
+- **Alasan:** Memenuhi preferensi visual owner agar logo tidak terkurung dalam kotak samping ("jangan ada kotak sampingnya"), serta memberikan kendali penuh bagi owner untuk memilih sendiri parfum mana yang tampil di Beranda via toggle checkbox `is_featured` di admin panel PocketBase tanpa perlu mengubah kode.
+

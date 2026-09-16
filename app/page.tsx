@@ -71,18 +71,16 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Right: Official Logo Showcase (Requested by User) */}
-            <div className="lg:col-span-5">
-              <div className="relative aspect-square w-full overflow-hidden bg-[#141414] border border-[#262420] flex items-center justify-center p-10 sm:p-14">
-                <div className="relative w-full h-full">
-                  <Image
-                    src="/images/logo.png"
-                    alt="Logo Resmi CV Sumber Wangi Madiun Group"
-                    fill
-                    priority
-                    className="object-contain"
-                  />
-                </div>
+            {/* Right: Official Logo Showcase (Transparent, tanpa kotak pembatas) */}
+            <div className="lg:col-span-5 flex items-center justify-center">
+              <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-[380px] lg:h-[380px]">
+                <Image
+                  src="/images/logo.png"
+                  alt="Logo Resmi CV Sumber Wangi Madiun Group"
+                  fill
+                  priority
+                  className="object-contain"
+                />
               </div>
             </div>
           </div>
