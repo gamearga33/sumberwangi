@@ -94,6 +94,18 @@ async function run() {
         type: 'bool',
         required: false,
       },
+      {
+        name: 'created',
+        type: 'autodate',
+        onCreate: true,
+        onUpdate: false,
+      },
+      {
+        name: 'updated',
+        type: 'autodate',
+        onCreate: true,
+        onUpdate: true,
+      },
     ],
     indexes: ['CREATE UNIQUE INDEX `idx_products_slug` ON `products` (`slug`)'],
   };
