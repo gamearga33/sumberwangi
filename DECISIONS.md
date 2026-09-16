@@ -116,5 +116,16 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
   5. **Tautan Semantik & Pure Filtering pada `ProductCatalog.tsx`:**
      - Menggantikan tombol `<button>` dengan semantik `<Link replace scroll={false}>` agar tab kategori dapat di-crawl search engine dan mendukung aksi right-click "Buka di tab baru", sembari tetap berjalan instan di memori via fungsi murni `filterProductsByCategory` yang teruji 100% unit test di Vitest.
 
-
-
+## 2026-09-16 — Penyatuan Katalog Produk (Peniadaan Kategori Pria/Wanita/Unisex) & Penghapusan Referensi Pembayaran QRIS
+- **Keputusan:**
+  1. **Penyatuan Seluruh Varian Parfum Menjadi Satu Katalog Utuh:**
+     - Sesuai permintaan owner, seluruh pembagian/kategori produk ("Pria", "Wanita", "Unisex") ditiadakan.
+     - Komponen `components/ProductCatalog.tsx` disederhanakan: tab filter kategori dihapus, seluruh varian aktif ditampilkan langsung bersamaan tanpa filter URL `?kategori=`.
+     - Badge/label kategori pada `ProductCard` dan halaman detail produk (`app/produk/[slug]/page.tsx`) diubah untuk hanya menampilkan informasi ukuran dan konsentrasi murni (`35 ml · Eau De Parfum`).
+     - Teks copy pada Beranda (`app/page.tsx`), Halaman Katalog (`app/produk/page.tsx`), dan Tentang Kami disesuaikan agar tidak lagi membedakan gender/kategori aroma.
+     - Form Tambah & Edit Produk di Panel Admin (`app/admin/produk/baru` & `app/admin/produk/[id]/edit`) serta tabel `app/admin/dashboard` disederhanakan dengan meniadakan input pemilihan kategori (kolom diganti menjadi Ukuran & Konsentrasi).
+  2. **Penghapusan Referensi Pembayaran QRIS:**
+     - Menghapus referensi metode QRIS di langkah ke-3 alur pemesanan pada Beranda, digantikan dengan *"Konfirmasi & Kirim"* via WhatsApp.
+     - Menghapus keterangan *"Pembayaran via QRIS"* pada halaman detail produk, digantikan dengan *"Pemesanan diproses langsung oleh tim Sumber Wangi melalui WhatsApp"*.
+     - Menghapus poin *"Pembayaran praktis via QRIS"* pada footer, digantikan dengan *"Pemesanan cepat & mudah via WhatsApp"*.
+- **Alasan:** Memenuhi instruksi langsung dari owner untuk menyederhanakan pengalaman belanja pengunjung (semua varian disatukan tanpa pemisahan gender) serta mengarahkan alur konfirmasi transaksi sepenuhnya melalui komunikasi personal WhatsApp resmi Sumber Wangi.

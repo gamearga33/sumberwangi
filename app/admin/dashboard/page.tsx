@@ -328,7 +328,7 @@ export default function AdminDashboardPage() {
                 <thead className="border-b border-[#262420] bg-[#1a1a1a] text-[10px] uppercase tracking-wider text-[#85837b]">
                   <tr>
                     <th className="py-3.5 pl-6 pr-3">Produk</th>
-                    <th className="py-3.5 px-3">Kategori & Ukuran</th>
+                    <th className="py-3.5 px-3">Ukuran & Konsentrasi</th>
                     <th className="py-3.5 px-3">Harga</th>
                     <th className="py-3.5 px-3 text-center">Status Stok</th>
                     <th className="py-3.5 px-3 text-center">Populer</th>
@@ -361,13 +361,13 @@ export default function AdminDashboardPage() {
                           </div>
                         </td>
 
-                        {/* Category & Size */}
+                        {/* Size & Concentration */}
                         <td className="py-4 px-3">
-                          <div className="text-[#a3a099]">
-                            {product.category || '—'}
+                          <div className="text-[#a3a099] font-medium">
+                            {product.size_ml ? `${product.size_ml} ml` : '35 ml'}
                           </div>
                           <div className="text-[10px] text-[#52504b]">
-                            {product.size_ml ? `${product.size_ml} ml` : '35 ml'}
+                            Eau De Parfum
                           </div>
                         </td>
 

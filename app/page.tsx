@@ -62,7 +62,7 @@ export default async function HomePage() {
                 </div>
                 <div>
                   <span className="font-semibold text-[#d4af37] block text-sm">11 Varian</span>
-                  <span className="text-[11px]">Pria, Wanita, Unisex</span>
+                  <span className="text-[11px]">Aroma Pilihan</span>
                 </div>
                 <div>
                   <span className="font-semibold text-[#d4af37] block text-sm">12 - 14+ Jam</span>
@@ -142,8 +142,8 @@ export default async function HomePage() {
             Parfum Pilihan dengan Harga Terjangkau
           </h2>
           <p className="text-sm sm:text-base leading-relaxed text-[#a3a099] pt-2">
-            Sumber Wangi menyediakan berbagai pilihan parfum untuk pria dan wanita dengan
-            aroma pilihan dan harga yang terjangkau bagi semua kalangan.
+            Sumber Wangi menyediakan berbagai pilihan parfum dengan aroma pilihan dan harga
+            yang terjangkau bagi semua kalangan.
           </p>
           <div className="pt-4">
             <Link
@@ -174,7 +174,7 @@ export default async function HomePage() {
               <span className="text-xs font-semibold text-[#d4af37] block">01</span>
               <h3 className="text-sm font-semibold text-[#f2f0ea]">Pilih Aroma Favorit</h3>
               <p className="text-xs leading-relaxed text-[#a3a099]">
-                Pilih dari 11 varian aroma wangi untuk pria, wanita, maupun unisex.
+                Pilih dari 11 varian aroma wangi pilihan yang sesuai dengan selera Anda.
               </p>
             </div>
 
@@ -188,9 +188,9 @@ export default async function HomePage() {
 
             <div className="space-y-2 border-t border-[#d4af37]/60 pt-4">
               <span className="text-xs font-semibold text-[#d4af37] block">03</span>
-              <h3 className="text-sm font-semibold text-[#f2f0ea]">Bayar QRIS & Kirim</h3>
+              <h3 className="text-sm font-semibold text-[#f2f0ea]">Konfirmasi & Kirim</h3>
               <p className="text-xs leading-relaxed text-[#a3a099]">
-                Selesaikan pembayaran praktis via QRIS dan paket dikirim aman ke alamat Anda.
+                Konfirmasi pesanan via WhatsApp dan paket dikirim aman ke alamat Anda.
               </p>
             </div>
           </div>

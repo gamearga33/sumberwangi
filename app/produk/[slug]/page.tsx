@@ -119,10 +119,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
             {/* Header info */}
             <div className="space-y-2">
               <div className="text-xs uppercase tracking-wider text-[#d4af37] font-medium">
-                {product.category && <span>{product.category}</span>}
-                {product.category && product.size_ml && <span> · </span>}
-                {product.size_ml && <span>{product.size_ml} ml</span>}
-                <span> · Eau De Parfum</span>
+                <span>{product.size_ml ? `${product.size_ml} ml` : '35 ml'}</span>
+                <span> · </span>
+                <span>Eau De Parfum</span>
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#f2f0ea]">
@@ -148,7 +147,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               />
 
               <p className="text-xs text-[#85837b] text-center">
-                Pemesanan diproses langsung oleh tim Sumber Wangi. Pembayaran via QRIS.
+                Pemesanan diproses langsung oleh tim Sumber Wangi melalui WhatsApp.
               </p>
             </div>
 

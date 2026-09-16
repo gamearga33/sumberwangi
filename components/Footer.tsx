@@ -95,7 +95,7 @@ export const Footer: React.FC = () => {
                   <ArrowUpRight className="h-3 w-3" />
                 </a>
               </li>
-              <li>Pembayaran praktis via QRIS</li>
+              <li>Pemesanan cepat & mudah via WhatsApp</li>
               <li>Pengiriman aman ke seluruh Nusantara</li>
             </ul>
           </div>

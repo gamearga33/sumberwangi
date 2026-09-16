@@ -7,7 +7,7 @@ import { ProductGridSkeleton } from '@/components/LoadingSkeleton';
 export const metadata: Metadata = {
   title: 'Katalog Parfum — CV Sumber Wangi Madiun Group',
   description:
-    'Koleksi lengkap parfum artisanal CV Sumber Wangi Madiun Group untuk pria, wanita, dan unisex.',
+    'Koleksi lengkap parfum artisanal CV Sumber Wangi Madiun Group dengan aroma mewah dan tahan lama.',
 };
 
 export const revalidate = 60; // ISR revalidate data setiap 60 detik

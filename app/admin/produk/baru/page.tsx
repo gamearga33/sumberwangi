@@ -13,7 +13,6 @@ import {
   Save,
 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
-import { ProductCategory } from '@/lib/types';
 import { generateSlug, validateProductData } from '@/lib/utils';
 
 export default function TambahProdukBaruPage() {
@@ -24,7 +23,6 @@ export default function TambahProdukBaruPage() {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState<number | ''>(20000);
   const [sizeMl, setSizeMl] = useState<number | ''>(35);
-  const [category, setCategory] = useState<ProductCategory>('Unisex');
   const [isAvailable, setIsAvailable] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
 
@@ -73,7 +71,7 @@ export default function TambahProdukBaruPage() {
       description,
       price: price === '' ? 0 : Number(price),
       size_ml: sizeMl === '' ? undefined : Number(sizeMl),
-      category,
+      category: null,
       is_available: isAvailable,
       is_featured: isFeatured,
       image_file: imageFile,
@@ -124,7 +122,7 @@ export default function TambahProdukBaruPage() {
         description: description.trim(),
         price: Math.round(Number(price)),
         size_ml: sizeMl === '' ? null : Math.round(Number(sizeMl)),
-        category,
+        category: null,
         image_url: publicUrl,
         is_available: isAvailable,
         is_featured: isFeatured,
@@ -233,24 +231,8 @@ export default function TambahProdukBaruPage() {
             </div>
           </div>
 
-          {/* 2. Kategori, Harga & Ukuran */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <label htmlFor="category" className="block text-xs uppercase tracking-wider text-[#a3a099] font-medium">
-                Kategori
-              </label>
-              <select
-                id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value as ProductCategory)}
-                className="w-full border border-[#262420] bg-[#0d0d0d] px-3.5 py-2.5 text-xs text-[#f2f0ea] focus:border-[#d4af37] focus:outline-none transition-colors"
-              >
-                <option value="Wanita">Wanita</option>
-                <option value="Pria">Pria</option>
-                <option value="Unisex">Unisex</option>
-              </select>
-            </div>
-
+          {/* 2. Harga & Ukuran */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label htmlFor="price" className="block text-xs uppercase tracking-wider text-[#a3a099] font-medium">
                 Harga (Rupiah) <span className="text-[#d4af37]">*</span>

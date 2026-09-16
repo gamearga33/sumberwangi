@@ -32,12 +32,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
       {/* Product Info */}
       <div className="flex flex-1 flex-col p-4">
-        {/* Subtle Category & Size */}
+        {/* Subtle Size & Concentration */}
         <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-[#d4af37]">
-          {product.category && <span>{product.category}</span>}
-          {product.category && product.size_ml && <span>·</span>}
-          {product.size_ml && <span>{product.size_ml} ml</span>}
-          <span>· EDP</span>
+          <span>{product.size_ml ? `${product.size_ml} ml` : '35 ml'}</span>
+          <span>·</span>
+          <span>Eau De Parfum</span>
         </div>
 
         {/* Title */}
