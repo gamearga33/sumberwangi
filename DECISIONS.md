@@ -29,3 +29,9 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
   1. **Logo Resmi:** Menggunakan file logo resmi CV Sumber Wangi Madiun Group (`/images/logo.png`) pada Navbar, Footer, dan Favicon.
   2. **Tema Hitam & Gold:** Mengaplikasikan tema warna luxury dark mode dengan background obsidian black (`#0d0d0d`), surface `#141414`, border halus `#262420`, aksen emas artisanal murni (`#d4af37`), serta teks lembut yang mudah dibaca (`#f2f0ea` dan `#a3a099`). Desain tetap dijaga minimalis, bersih, tanpa efek glow/sparkles berlebihan.
   3. **Nomor WhatsApp Resmi:** Menggunakan nomor `081333226161` (format internasional `6281333226161`) di `.env.local`, `.env.example`, helper `lib/whatsapp.ts`, serta test suite `lib/whatsapp.test.ts`.
+
+## 2026-09-16 — Penyelarasan 11 Varian Parfum Resmi & Hero Image
+- **Keputusan:**
+  1. **11 Varian Parfum Resmi:** Memperbarui database produk dengan 11 varian resmi dari kode HTML owner (Romanwish, Bulgari Aqua, Nagita, Vanilla Ice, Melati Keraton, Harajuku Love, Sakura, Avril, Shisi, JLO Still, Dunhill Blue) dengan harga seragam Rp20.000 dan ukuran 35ml.
+  2. **Hero Image Logo:** Mengganti foto hero banner beranda menjadi display logo resmi CV Sumber Wangi Madiun Group dengan latar belakang obsidian dark dan gold accent frame.
+- **Alasan:** Memastikan katalog produk, harga, dan visual branding di website 100% akurat dengan operasional komersial dan materi promosi CV Sumber Wangi Madiun Group saat ini.

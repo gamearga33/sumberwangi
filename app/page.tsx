@@ -10,30 +10,27 @@ import { getWhatsAppConsultationUrl } from '@/lib/whatsapp';
 export const revalidate = 60; // ISR revalidate setiap 60 detik
 
 export default async function HomePage() {
-  const { data: featuredProducts, error } = await getFeaturedProducts(4);
+  const { data: featuredProducts, error } = await getFeaturedProducts(8);
 
   return (
     <div className="flex flex-col bg-[#0d0d0d] text-[#f2f0ea]">
-      {/* 1. HERO SECTION — Luxury Black & Gold */}
+      {/* 1. HERO SECTION — Logo Showcase & Black/Gold Aesthetic */}
       <section className="border-b border-[#262420] pt-14 pb-20 md:pt-24 md:pb-28">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
             {/* Left: Typography */}
             <div className="space-y-6 lg:col-span-7">
-              <div className="flex items-center gap-2">
-                <span className="text-xs uppercase tracking-[0.25em] text-[#d4af37] font-medium block">
-                  CV SUMBER WANGI MADIUN GROUP
-                </span>
-              </div>
+              <span className="text-xs uppercase tracking-[0.25em] text-[#d4af37] font-medium block">
+                CV SUMBER WANGI MADIUN GROUP
+              </span>
 
               <h1 className="text-4xl font-semibold tracking-tight text-[#f2f0ea] sm:text-5xl lg:text-6xl leading-[1.1]">
-                Keharuman mewah dengan{' '}
-                <span className="text-[#d4af37]">karakter abadi.</span>
+                Temukan Aroma <span className="text-[#d4af37]">Favoritmu.</span>
               </h1>
 
               <p className="max-w-xl text-base sm:text-lg leading-relaxed text-[#a3a099]">
-                Diformulasikan dari bibit wewangian murni berkonsentrasi tinggi.
-                Aroma berkarakter elegan yang menyatu halus pada kulit dan bertahan sepanjang hari.
+                Parfum pilihan berkualitas dengan keharuman elegan dan harga terjangkau.
+                Semua varian parfum hanya <strong className="text-[#d4af37] font-semibold">Rp20.000</strong>.
               </p>
 
               {/* CTAs */}
@@ -42,7 +39,7 @@ export default async function HomePage() {
                   href="/produk"
                   className="inline-flex items-center gap-2 bg-[#d4af37] px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#0d0d0d] hover:bg-[#e2bd46] transition-colors"
                 >
-                  <span>Lihat Katalog Parfum</span>
+                  <span>Lihat Semua Parfum</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
 
@@ -52,7 +49,7 @@ export default async function HomePage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 border border-[#d4af37]/60 px-6 py-3.5 text-xs font-medium uppercase tracking-wider text-[#d4af37] hover:bg-[#d4af37] hover:text-[#0d0d0d] transition-all duration-200"
                 >
-                  <span>Konsultasi WA: 0813-3322-6161</span>
+                  <span>Pesan via WA: 0813-3322-6161</span>
                   <ArrowUpRight className="h-3.5 w-3.5" />
                 </a>
               </div>
@@ -60,45 +57,31 @@ export default async function HomePage() {
               {/* Sub-details */}
               <div className="pt-8 border-t border-[#262420] grid grid-cols-3 gap-6 text-xs text-[#a3a099]">
                 <div>
-                  <span className="font-semibold text-[#d4af37] block text-sm">Eau De Parfum</span>
-                  <span className="text-[11px]">Konsentrasi murni</span>
+                  <span className="font-semibold text-[#d4af37] block text-sm">Rp20.000</span>
+                  <span className="text-[11px]">Harga seragam</span>
+                </div>
+                <div>
+                  <span className="font-semibold text-[#d4af37] block text-sm">11 Varian</span>
+                  <span className="text-[11px]">Pria, Wanita, Unisex</span>
                 </div>
                 <div>
                   <span className="font-semibold text-[#d4af37] block text-sm">12 - 14+ Jam</span>
-                  <span className="text-[11px]">Longevity teruji</span>
-                </div>
-                <div>
-                  <span className="font-semibold text-[#d4af37] block text-sm">Food Grade</span>
-                  <span className="text-[11px]">Aman di kulit</span>
+                  <span className="text-[11px]">Ketahanan wangi</span>
                 </div>
               </div>
             </div>
 
-            {/* Right: Featured Bottle Showcase */}
+            {/* Right: Official Logo Showcase (Requested by User) */}
             <div className="lg:col-span-5">
-              <div className="relative aspect-square w-full overflow-hidden bg-[#141414] border border-[#262420]">
-                <Image
-                  src="/images/products/oud-royale.jpg"
-                  alt="Sumber Wangi Oud Royale"
-                  fill
-                  priority
-                  className="object-cover opacity-95"
-                />
-                <div className="absolute bottom-4 left-4 right-4 bg-[#0d0d0d]/90 backdrop-blur-md p-4 border border-[#262420] flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] uppercase tracking-widest text-[#d4af37] block font-medium">
-                      Varian Unggulan
-                    </span>
-                    <span className="text-sm font-medium text-[#f2f0ea]">
-                      Oud Royale Eau De Parfum
-                    </span>
-                  </div>
-                  <Link
-                    href="/produk/oud-royale"
-                    className="text-xs uppercase tracking-wider font-semibold text-[#d4af37] hover:text-[#e8c96c]"
-                  >
-                    Detail &rarr;
-                  </Link>
+              <div className="relative aspect-square w-full overflow-hidden bg-[#141414] border border-[#262420] flex items-center justify-center p-10 sm:p-14">
+                <div className="relative w-full h-full">
+                  <Image
+                    src="/images/logo.png"
+                    alt="Logo Resmi CV Sumber Wangi Madiun Group"
+                    fill
+                    priority
+                    className="object-contain"
+                  />
                 </div>
               </div>
             </div>
@@ -106,7 +89,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 2. KOLEKSI PILIHAN */}
+      {/* 2. KOLEKSI PARFUM PILIHAN */}
       <section className="py-20 border-b border-[#262420] bg-[#0f0f0f]">
         <div className="mx-auto max-w-6xl px-6">
           <div className="flex items-end justify-between mb-12">
@@ -115,15 +98,18 @@ export default async function HomePage() {
                 Koleksi Pilihan
               </span>
               <h2 className="mt-1 text-2xl sm:text-3xl font-semibold tracking-tight text-[#f2f0ea]">
-                Varian Terfavorit
+                Varian Parfum Populer
               </h2>
+              <p className="mt-1 text-xs sm:text-sm text-[#a3a099]">
+                Semua parfum hanya <span className="text-[#d4af37] font-semibold">Rp20.000</span>
+              </p>
             </div>
 
             <Link
               href="/produk"
               className="inline-flex items-center gap-1 text-xs uppercase tracking-wider text-[#d4af37] hover:text-[#e8c96c] transition-colors"
             >
-              <span>Semua Produk</span>
+              <span>Lihat 11 Varian</span>
               <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
@@ -148,21 +134,20 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 3. FILOSOFI BRAND */}
-      <section className="py-20 md:py-28 border-b border-[#262420] bg-[#0d0d0d]">
-        <div className="mx-auto max-w-4xl px-6 text-center space-y-6">
+      {/* 3. TENTANG SUMBER WANGI — Sesuai HTML */}
+      <section className="py-20 md:py-24 border-b border-[#262420] bg-[#0d0d0d]">
+        <div className="mx-auto max-w-3xl px-6 text-center space-y-4">
           <span className="text-xs uppercase tracking-[0.25em] text-[#d4af37] block font-medium">
-            Filosofi & Kualitas
+            Tentang Sumber Wangi
           </span>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-[#f2f0ea] leading-snug">
-            Kekayaan aroma Nusantara, diracik dengan presisi artisanal standar tinggi.
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#f2f0ea]">
+            Parfum Pilihan dengan Harga Terjangkau
           </h2>
-          <p className="text-sm sm:text-base leading-relaxed text-[#a3a099] max-w-2xl mx-auto">
-            Dari kedalaman aroma kayu gaharu dan nilam hingga kesegaran kelopak melati putih
-            dan jeruk sitrun tropis. Sumber Wangi memadukan bibit murni berstandar tinggi
-            tanpa campuran pelarut berbahaya, memberikan aroma yang berkelas dan tahan seharian.
+          <p className="text-sm sm:text-base leading-relaxed text-[#a3a099] pt-2">
+            Sumber Wangi menyediakan berbagai pilihan parfum untuk pria dan wanita dengan
+            aroma pilihan dan harga yang terjangkau bagi semua kalangan.
           </p>
-          <div className="pt-2">
+          <div className="pt-4">
             <Link
               href="/tentang"
               className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider font-semibold text-[#d4af37] hover:text-[#e8c96c] transition-colors"
@@ -174,7 +159,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 4. CARA PEMESANAN PRAKTIS */}
+      {/* 4. CARA PEMESANAN */}
       <section className="py-16 md:py-20 border-b border-[#262420] bg-[#121212]">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12">
@@ -189,39 +174,39 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="space-y-2 border-t border-[#d4af37]/60 pt-4">
               <span className="text-xs font-semibold text-[#d4af37] block">01</span>
-              <h3 className="text-sm font-semibold text-[#f2f0ea]">Pilih Varian Aroma</h3>
+              <h3 className="text-sm font-semibold text-[#f2f0ea]">Pilih Aroma Favorit</h3>
               <p className="text-xs leading-relaxed text-[#a3a099]">
-                Temukan aroma favorit Anda dari katalog lengkap kami.
+                Pilih dari 11 varian aroma wangi untuk pria, wanita, maupun unisex.
               </p>
             </div>
 
             <div className="space-y-2 border-t border-[#d4af37]/60 pt-4">
               <span className="text-xs font-semibold text-[#d4af37] block">02</span>
-              <h3 className="text-sm font-semibold text-[#f2f0ea]">Klik Pesan via WhatsApp</h3>
+              <h3 className="text-sm font-semibold text-[#f2f0ea]">Pesan via WhatsApp</h3>
               <p className="text-xs leading-relaxed text-[#a3a099]">
-                Format pesanan akan otomatis terkirim ke WhatsApp customer service kami.
+                Klik tombol pesan untuk mengirimkan detail pesanan otomatis ke WhatsApp.
               </p>
             </div>
 
             <div className="space-y-2 border-t border-[#d4af37]/60 pt-4">
               <span className="text-xs font-semibold text-[#d4af37] block">03</span>
-              <h3 className="text-sm font-semibold text-[#f2f0ea]">Bayar QRIS & Pengiriman</h3>
+              <h3 className="text-sm font-semibold text-[#f2f0ea]">Bayar QRIS & Kirim</h3>
               <p className="text-xs leading-relaxed text-[#a3a099]">
-                Selesaikan pembayaran aman via QRIS dan paket dikirim aman ke alamat Anda.
+                Selesaikan pembayaran praktis via QRIS dan paket dikirim aman ke alamat Anda.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5. KONSULTASI WHATSAPP CTA */}
+      {/* 5. KONTAK PESAN SEKARANG */}
       <section className="py-20 bg-[#0d0d0d]">
         <div className="mx-auto max-w-6xl px-6 text-center space-y-4">
-          <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-[#f2f0ea]">
-            Ingin rekomendasi parfum yang pas untuk kepribadian Anda?
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#f2f0ea]">
+            Pesan Sekarang
           </h2>
           <p className="text-xs sm:text-sm text-[#a3a099] max-w-md mx-auto leading-relaxed">
-            Hubungi kami di WhatsApp (0813-3322-6161). Kami siap membantu memberikan rekomendasi terbaik.
+            Pilih aroma favoritmu dan hubungi kami langsung melalui WhatsApp (0813-3322-6161).
           </p>
           <div className="pt-2">
             <a
@@ -230,7 +215,7 @@ export default async function HomePage() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 bg-[#d4af37] px-7 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#0d0d0d] hover:bg-[#e2bd46] transition-colors"
             >
-              <span>Konsultasi via WhatsApp</span>
+              <span>WhatsApp Sumber Wangi</span>
               <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
           </div>
