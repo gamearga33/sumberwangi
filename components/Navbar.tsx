@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Sparkles, Menu, X, MessageCircle } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { getWhatsAppConsultationUrl } from '@/lib/whatsapp';
 
 export const Navbar: React.FC = () => {
@@ -12,8 +12,8 @@ export const Navbar: React.FC = () => {
 
   const navLinks = [
     { name: 'Beranda', href: '/' },
-    { name: 'Katalog Parfum', href: '/produk' },
-    { name: 'Tentang Kami', href: '/tentang' },
+    { name: 'Katalog', href: '/produk' },
+    { name: 'Tentang', href: '/tentang' },
   ];
 
   const isActive = (href: string) => {
@@ -22,24 +22,16 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-stone-200/80 bg-white/90 backdrop-blur-md transition-colors dark:border-stone-800/80 dark:bg-stone-950/90">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-18">
-        {/* Brand Logo */}
+    <header className="sticky top-0 z-40 w-full border-b border-[#e8e6df] bg-[#fbfbf9]/95 backdrop-blur-sm">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 h-16">
+        {/* Brand Logo - Minimalist Clean Typography */}
         <Link
           href="/"
-          className="group flex items-center gap-2.5 transition-transform hover:scale-[1.01]"
+          className="flex flex-col tracking-[0.22em] text-[#141413] hover:opacity-80 transition-opacity"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 text-white shadow-md shadow-amber-950/20">
-            <Sparkles className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-serif text-xl font-bold tracking-wider text-stone-900 dark:text-stone-100">
-              SUMBER WANGI
-            </span>
-            <span className="text-[10px] tracking-widest text-amber-700 dark:text-amber-400 uppercase font-medium">
-              Artisanal Perfumery
-            </span>
-          </div>
+          <span className="text-sm sm:text-base font-semibold uppercase">
+            SUMBER WANGI
+          </span>
         </Link>
 
         {/* Desktop Nav Links */}
@@ -48,10 +40,10 @@ export const Navbar: React.FC = () => {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium transition-colors ${
+              className={`text-xs uppercase tracking-widest transition-colors ${
                 isActive(link.href)
-                  ? 'text-amber-700 dark:text-amber-400 font-semibold'
-                  : 'text-stone-700 hover:text-stone-950 dark:text-stone-300 dark:hover:text-white'
+                  ? 'text-[#141413] font-semibold border-b border-[#141413] pb-0.5'
+                  : 'text-[#706f6a] hover:text-[#141413]'
               }`}
             >
               {link.name}
@@ -59,62 +51,62 @@ export const Navbar: React.FC = () => {
           ))}
         </nav>
 
-        {/* Desktop Right CTA */}
+        {/* Desktop Right Action */}
         <div className="hidden md:flex items-center gap-4">
           <a
             href={getWhatsAppConsultationUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-emerald-700 active:scale-95"
+            className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-[#141413] hover:opacity-70 transition-opacity"
           >
-            <MessageCircle className="h-4 w-4" />
-            <span>Chat WhatsApp</span>
+            <span>WhatsApp</span>
+            <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Toggle */}
         <div className="flex md:hidden items-center">
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="inline-flex items-center justify-center rounded-lg p-2 text-stone-700 hover:bg-stone-100 hover:text-stone-900 focus:outline-none dark:text-stone-300 dark:hover:bg-stone-800"
+            className="p-1.5 text-[#141413] hover:opacity-70 focus:outline-none"
             aria-expanded={isOpen}
-            aria-label="Buka menu navigasi"
+            aria-label="Toggle navigation menu"
           >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Menu */}
       {isOpen && (
-        <div className="border-b border-stone-200 bg-white/95 px-4 pt-2 pb-6 backdrop-blur-md md:hidden dark:border-stone-800 dark:bg-stone-950/95">
-          <div className="flex flex-col space-y-3">
+        <div className="border-b border-[#e8e6df] bg-[#fbfbf9] px-6 py-6 md:hidden">
+          <div className="flex flex-col space-y-4">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`rounded-lg px-3 py-2.5 text-base font-medium transition-colors ${
+                className={`text-sm tracking-wider uppercase transition-colors ${
                   isActive(link.href)
-                    ? 'bg-amber-50 text-amber-800 font-semibold dark:bg-amber-950/40 dark:text-amber-300'
-                    : 'text-stone-700 hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-stone-900'
+                    ? 'font-semibold text-[#141413]'
+                    : 'text-[#706f6a] hover:text-[#141413]'
                 }`}
               >
                 {link.name}
               </Link>
             ))}
 
-            <div className="pt-2 border-t border-stone-200 dark:border-stone-800">
+            <div className="pt-4 border-t border-[#e8e6df]">
               <a
                 href={getWhatsAppConsultationUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsOpen(false)}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+                className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-[#141413]"
               >
-                <MessageCircle className="h-4 w-4" />
-                <span>Konsultasi via WhatsApp</span>
+                <span>Kontak WhatsApp</span>
+                <ArrowUpRight className="h-3.5 w-3.5" />
               </a>
             </div>
           </div>

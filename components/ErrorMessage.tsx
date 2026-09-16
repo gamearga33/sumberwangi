@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertCircle, RefreshCw, MessageCircle } from 'lucide-react';
+import { RefreshCw, ArrowUpRight } from 'lucide-react';
 import { getWhatsAppConsultationUrl } from '@/lib/whatsapp';
 
 interface ErrorMessageProps {
@@ -10,32 +10,28 @@ interface ErrorMessageProps {
 }
 
 export const ErrorMessage: React.FC<ErrorMessageProps> = ({
-  title = 'Gagal Memuat Produk',
-  message = 'Katalog produk sedang tidak dapat dimuat saat ini. Silakan periksa koneksi Anda atau hubungi kami langsung.',
+  title = 'Tidak dapat memuat produk',
+  message = 'Daftar produk sedang tidak dapat diakses saat ini. Silakan coba sesaat lagi atau hubungi kami langsung.',
   onRetry,
   showWhatsAppFallback = true,
 }) => {
   return (
-    <div className="mx-auto my-8 max-w-lg rounded-2xl border border-amber-200/60 bg-amber-50/50 p-6 text-center backdrop-blur-sm dark:border-amber-900/40 dark:bg-stone-900">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-400">
-        <AlertCircle className="h-6 w-6" />
-      </div>
-
-      <h3 className="mt-4 font-serif text-lg font-bold text-stone-900 dark:text-stone-100">
+    <div className="mx-auto my-12 max-w-lg border border-[#e8e6df] bg-white p-8 text-center">
+      <h3 className="text-sm font-medium uppercase tracking-wider text-[#141413]">
         {title}
       </h3>
 
-      <p className="mt-2 text-sm leading-relaxed text-stone-600 dark:text-stone-400">
+      <p className="mt-2 text-xs leading-relaxed text-[#706f6a]">
         {message}
       </p>
 
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
         {onRetry && (
           <button
             onClick={onRetry}
-            className="inline-flex items-center gap-2 rounded-xl bg-stone-900 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white cursor-pointer"
+            className="inline-flex items-center gap-1.5 border border-[#141413] px-4 py-2 text-xs uppercase tracking-wider text-[#141413] hover:bg-[#141413] hover:text-white transition-colors cursor-pointer"
           >
-            <RefreshCw className="h-3.5 w-3.5" />
+            <RefreshCw className="h-3 w-3" />
             <span>Coba Lagi</span>
           </button>
         )}
@@ -45,10 +41,10 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
             href={getWhatsAppConsultationUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-emerald-700"
+            className="inline-flex items-center gap-1 bg-[#141413] px-4 py-2 text-xs uppercase tracking-wider text-white hover:bg-[#282826] transition-colors"
           >
-            <MessageCircle className="h-3.5 w-3.5" />
-            <span>Tanya via WhatsApp</span>
+            <span>Hubungi WhatsApp</span>
+            <ArrowUpRight className="h-3 w-3" />
           </a>
         )}
       </div>

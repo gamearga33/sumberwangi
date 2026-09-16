@@ -21,31 +21,31 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   className = '',
   isConsultation = false,
 }) => {
-  const url = isConsultation || !productName || price === undefined
-    ? getWhatsAppConsultationUrl()
-    : getWhatsAppOrderUrl({ productName, price });
+  const url =
+    isConsultation || !productName || price === undefined
+      ? getWhatsAppConsultationUrl()
+      : getWhatsAppOrderUrl({ productName, price });
 
   const defaultLabel = isConsultation
-    ? 'Konsultasi via WhatsApp'
+    ? 'Konsultasi WhatsApp'
     : label || 'Pesan via WhatsApp';
 
-  // Styling varian warna
+  // Minimalist modern styling
   const variantStyles = {
     primary:
-      'bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-md shadow-emerald-950/20 hover:shadow-lg transition-all duration-200 active:scale-[0.98]',
+      'bg-[#141413] text-[#fbfbf9] hover:bg-[#2c2b28] transition-colors font-medium',
     secondary:
-      'bg-amber-600 hover:bg-amber-700 text-white font-medium shadow-md shadow-amber-950/20 hover:shadow-lg transition-all duration-200 active:scale-[0.98]',
+      'bg-[#2c2b28] text-white hover:bg-[#141413] transition-colors font-medium',
     outline:
-      'border border-emerald-600/40 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition-all duration-200',
+      'border border-[#141413] text-[#141413] hover:bg-[#141413] hover:text-[#fbfbf9] transition-colors font-medium',
     compact:
-      'bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs px-3 py-1.5 rounded-lg transition-all duration-150 active:scale-95',
+      'bg-[#141413] text-[#fbfbf9] hover:bg-[#2c2b28] transition-colors font-medium text-xs px-3 py-1.5',
   };
 
-  // Ukuran tombol
   const sizeStyles = {
-    sm: 'text-xs px-3 py-2 rounded-lg gap-1.5',
-    md: 'text-sm px-4 py-2.5 rounded-xl gap-2',
-    lg: 'text-base px-6 py-3.5 rounded-2xl gap-2.5 font-semibold',
+    sm: 'text-xs px-3 py-2 gap-1.5',
+    md: 'text-xs uppercase tracking-wider px-5 py-3 gap-2',
+    lg: 'text-xs uppercase tracking-wider px-7 py-3.5 gap-2.5 font-medium',
   };
 
   const currentSize = variant === 'compact' ? '' : sizeStyles[size];
@@ -55,7 +55,7 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex items-center justify-center select-none cursor-pointer text-center ${variantStyles[variant]} ${currentSize} ${className}`}
+      className={`inline-flex items-center justify-center select-none cursor-pointer text-center transition-all duration-150 ${variantStyles[variant]} ${currentSize} ${className}`}
       aria-label={`${defaultLabel} ${productName ? `untuk ${productName}` : ''}`}
     >
       <MessageCircle
@@ -63,10 +63,8 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
           variant === 'compact'
             ? 'w-3.5 h-3.5'
             : size === 'lg'
-            ? 'w-5 h-5'
-            : size === 'sm'
             ? 'w-4 h-4'
-            : 'w-4 h-4'
+            : 'w-3.5 h-3.5'
         }
       />
       <span>{defaultLabel}</span>

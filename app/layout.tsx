@@ -7,25 +7,26 @@ import { Footer } from '@/components/Footer';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
+  display: 'swap',
 });
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'Sumber Wangi — Sentuhan Keharuman Abadi | Koleksi Parfum Mewah',
+  title: 'Sumber Wangi — Koleksi Parfum Artisanal',
   description:
-    'Brand parfum artisanal Indonesia dengan bibit wewangian premium berkonsentrasi tinggi, tahan hingga 14+ jam. Temukan aroma khas Anda untuk pria, wanita, dan unisex.',
+    'Brand parfum artisanal Indonesia dengan bibit wewangian murni berkonsentrasi tinggi. Karakter aroma elegan dan tahan lama.',
   keywords: [
     'Sumber Wangi',
     'parfum lokal',
     'parfum pria',
     'parfum wanita',
     'parfum tahan lama',
-    'parfum oud',
-    'minyak wangi mewah',
+    'parfum artisanal',
   ],
 };
 
@@ -36,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-stone-50 text-stone-900 selection:bg-amber-500/30 selection:text-amber-950 dark:bg-stone-950 dark:text-stone-100">
+      <body className="min-h-full flex flex-col bg-[#fbfbf9] text-[#141413]">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

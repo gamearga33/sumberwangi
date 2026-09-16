@@ -1,45 +1,40 @@
 import React from 'react';
 import Link from 'next/link';
-import { Sparkles, ArrowLeft, MessageCircle } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { getWhatsAppConsultationUrl } from '@/lib/whatsapp';
 
 export default function ProductNotFound() {
   return (
-    <div className="flex min-h-[70vh] flex-col items-center justify-center px-4 py-16 text-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-amber-500/10 text-amber-700 dark:text-amber-400 mb-6">
-        <Sparkles className="h-8 w-8" />
-      </div>
-
-      <span className="text-xs font-bold uppercase tracking-widest text-amber-700 dark:text-amber-400">
-        404 — Tidak Ditemukan
+    <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 py-16 text-center space-y-4">
+      <span className="text-xs uppercase tracking-[0.22em] text-[#706f6a]">
+        404 — Produk Tidak Ditemukan
       </span>
 
-      <h1 className="mt-2 font-serif text-3xl font-extrabold text-stone-900 sm:text-4xl dark:text-white">
-        Parfum Tidak Ditemukan
+      <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#141413]">
+        Varian parfum tidak ditemukan
       </h1>
 
-      <p className="mt-3 max-w-md text-sm text-stone-600 dark:text-stone-400 leading-relaxed">
-        Maaf, varian parfum yang Anda cari mungkin telah berganti nama, tidak lagi tersedia,
-        atau tautan yang Anda akses kurang tepat.
+      <p className="max-w-md text-xs sm:text-sm text-[#706f6a] leading-relaxed">
+        Parfum yang Anda cari mungkin tidak lagi tersedia atau alamat URL kurang sesuai.
       </p>
 
-      <div className="mt-8 flex flex-col sm:flex-row items-center gap-3">
+      <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
         <Link
           href="/produk"
-          className="inline-flex items-center gap-2 rounded-xl bg-stone-900 px-5 py-3 text-xs font-semibold text-white transition hover:bg-amber-700 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-white"
+          className="inline-flex items-center gap-1.5 bg-[#141413] px-5 py-3 text-xs uppercase tracking-wider text-[#fbfbf9] hover:bg-[#2c2b28] transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Kembali ke Katalog Parfum</span>
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span>Kembali ke Katalog</span>
         </Link>
 
         <a
           href={getWhatsAppConsultationUrl()}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-xl border border-stone-300 bg-white px-5 py-3 text-xs font-semibold text-stone-800 transition hover:border-emerald-600 hover:text-emerald-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200"
+          className="inline-flex items-center gap-1.5 border border-[#141413] px-5 py-3 text-xs uppercase tracking-wider text-[#141413] hover:bg-[#141413] hover:text-white transition-colors"
         >
-          <MessageCircle className="h-4 w-4 text-emerald-600" />
-          <span>Tanya Admin via WhatsApp</span>
+          <span>Tanya via WhatsApp</span>
+          <ArrowUpRight className="h-3.5 w-3.5" />
         </a>
       </div>
     </div>

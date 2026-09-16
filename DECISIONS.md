@@ -23,3 +23,11 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
 ## 2026-09-16 — Framework Testing Vitest
 - **Keputusan:** Menggunakan Vitest sebagai runner pengujian unit test untuk `lib/whatsapp.ts`, `lib/utils.ts`, dan validasi produk.
 - **Alasan:** Sangat cepat, kompatibel penuh dengan konfigurasi TypeScript dan arsitektur ESM Next.js, dan langsung lulus tanpa konfigurasi Babel yang rumit.
+
+## 2026-09-16 — Overhaul Desain: Modern Minimalist Typography & Anti-AI Cliché
+- **Keputusan:** Mengubah total gaya visual dari gaya template AI (banyak ikon sparkles, pill badges mengambang, efek glow blur, dan gradient text) menjadi gaya **Modern Minimalist Editorial** yang terinspirasi dari rumah wewangian artisanal kontemporer (seperti Le Labo, Byredo, Aesop).
+- **Perubahan yang Diterapkan:**
+  1. **Tipografi Modern:** Menggunakan Geist Sans modern geometric sans-serif dengan penekanan pada letter-spacing (`tracking-tight` pada judul dan `tracking-wider`/`tracking-[0.22em]` pada logotype dan kategori), menggantikan serif tradisional.
+  2. **Pembersihan Elemen AI:** Menghapus seluruh ikon sparkles, pill badge mengambang ("Ready Stock", "Signature Blend", "Koleksi Terfavorit"), dan kotak nomor proses belanja yang mencolok.
+  3. **Palet Warna Tenang:** Menghilangkan text gradient emas dan glow blur; menggunakan warna dasar warm neutral (`#fbfbf9`), border halus (`#e8e6df`), dan kontras teks matte black (`#141413`).
+  4. **Tata Letak Bersih:** Alur informasi dibuat editorial, rapi, dan memberikan ruang bernapas (whitespace) yang luas pada katalog dan halaman detail produk.
