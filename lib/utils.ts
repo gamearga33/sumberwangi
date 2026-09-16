@@ -61,17 +61,19 @@ export function validateProductData(
     errors.description = 'Deskripsi produk wajib diisi';
   }
 
-  // Validasi Harga
+  // Validasi Harga (wajib berupa angka bulat positif sesuai kolom integer Postgres)
   if (data.price === undefined || data.price === null || isNaN(Number(data.price))) {
     errors.price = 'Harga produk wajib diisi angka';
   } else if (Number(data.price) <= 0) {
     errors.price = 'Harga produk harus lebih besar dari 0';
+  } else if (!Number.isInteger(Number(data.price))) {
+    errors.price = 'Harga produk harus berupa bilangan bulat (tanpa desimal)';
   }
 
-  // Validasi Ukuran (opsional, tapi jika diisi harus angka positif)
+  // Validasi Ukuran (opsional, tapi jika diisi harus angka bulat positif)
   if (data.size_ml !== undefined && data.size_ml !== null && String(data.size_ml).trim() !== '') {
-    if (isNaN(Number(data.size_ml)) || Number(data.size_ml) <= 0) {
-      errors.size_ml = 'Ukuran botol harus berupa angka positif dalam ml';
+    if (isNaN(Number(data.size_ml)) || Number(data.size_ml) <= 0 || !Number.isInteger(Number(data.size_ml))) {
+      errors.size_ml = 'Ukuran botol harus berupa angka bulat positif dalam ml';
     }
   }
 

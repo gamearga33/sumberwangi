@@ -93,6 +93,52 @@ describe('validateProductData', () => {
     expect(result.errors.slug).toBeDefined();
   });
 
+  it('harus menolak harga desimal atau bukan bilangan bulat', () => {
+    const result = validateProductData({
+      name: 'Parfum Keren',
+      slug: 'parfum-keren',
+      description: 'Deskripsi parfum',
+      price: 20000.5,
+      image: new File(['mock'], 'test.jpg', { type: 'image/jpeg' }),
+    });
+
+    expect(result.isValid).toBe(false);
+    expect(result.errors.price).toBe('Harga produk harus berupa bilangan bulat (tanpa desimal)');
+  });
+
+  it('harus memvalidasi ukuran botol size_ml sebagai bilangan bulat positif jika diisi', () => {
+    const invalidDecimal = validateProductData({
+      name: 'Parfum Keren',
+      slug: 'parfum-keren',
+      description: 'Deskripsi parfum',
+      price: 20000,
+      size_ml: 35.5,
+      image: new File(['mock'], 'test.jpg', { type: 'image/jpeg' }),
+    });
+    expect(invalidDecimal.isValid).toBe(false);
+    expect(invalidDecimal.errors.size_ml).toBe('Ukuran botol harus berupa angka bulat positif dalam ml');
+
+    const invalidNegative = validateProductData({
+      name: 'Parfum Keren',
+      slug: 'parfum-keren',
+      description: 'Deskripsi parfum',
+      price: 20000,
+      size_ml: -10,
+      image: new File(['mock'], 'test.jpg', { type: 'image/jpeg' }),
+    });
+    expect(invalidNegative.isValid).toBe(false);
+
+    const validSize = validateProductData({
+      name: 'Parfum Keren',
+      slug: 'parfum-keren',
+      description: 'Deskripsi parfum',
+      price: 20000,
+      size_ml: 35,
+      image: new File(['mock'], 'test.jpg', { type: 'image/jpeg' }),
+    });
+    expect(validSize.isValid).toBe(true);
+  });
+
   it('harus mewajibkan gambar saat create baru, tetapi opsional saat update', () => {
     const dataWithoutImage = {
       name: 'Parfum Keren',

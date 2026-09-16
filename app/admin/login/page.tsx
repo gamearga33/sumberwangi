@@ -96,6 +96,18 @@ export default function AdminLoginPage() {
 
         {/* Form Container */}
         <div className="border border-[#262420] bg-[#141414] p-8 shadow-2xl">
+          {(!process.env.NEXT_PUBLIC_SUPABASE_URL ||
+            process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder') ||
+            !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.includes('placeholder')) && (
+            <div className="mb-6 flex items-start gap-3 border border-amber-900/60 bg-amber-950/30 p-4 text-xs text-amber-200">
+              <AlertCircle className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" />
+              <div className="flex-1 leading-relaxed">
+                <strong className="text-amber-300">Supabase belum dikonfigurasi.</strong> Harap lengkapi <code className="text-[#d4af37]">NEXT_PUBLIC_SUPABASE_URL</code> dan <code className="text-[#d4af37]">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> di <code className="text-[#d4af37]">.env.local</code> dengan Project URL dan Anon Key dari Dashboard Supabase Anda sebelum masuk.
+              </div>
+            </div>
+          )}
+
           {errorMessage && (
             <div className="mb-6 flex items-start gap-3 border border-red-900/60 bg-red-950/40 p-4 text-xs text-red-200">
               <AlertCircle className="h-4 w-4 shrink-0 text-red-400 mt-0.5" />
