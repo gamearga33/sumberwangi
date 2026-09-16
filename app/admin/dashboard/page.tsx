@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -23,7 +22,6 @@ import { formatRupiah } from '@/lib/utils';
 import { getProductImageUrl } from '@/lib/products';
 
 export default function AdminDashboardPage() {
-  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -108,10 +106,11 @@ export default function AdminDashboardPage() {
     try {
       const supabase = createClient();
       await supabase.auth.signOut();
-      router.push('/admin/login');
-      router.refresh();
-    } catch (err) {
-      console.error('Logout error:', err);
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- Hard navigation diperlukan agar sesi logout bersih total di server
+      window.location.href = '/admin/login';
+    } catch {
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- Hard navigation diperlukan agar sesi logout bersih total di server
+      window.location.href = '/admin/login';
     }
   };
 

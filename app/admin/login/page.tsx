@@ -1,18 +1,31 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Lock, Mail, AlertCircle, Loader2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Jika sudah memiliki sesi aktif, arahkan langsung ke dashboard
+  React.useEffect(() => {
+    try {
+      const supabase = createClient();
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- Hard navigation diperlukan agar seluruh cookie sesi Supabase terkirim utuh ke middleware server
+          window.location.href = '/admin/dashboard';
+        }
+      });
+    } catch {
+      // Abaikan jika konfigurasi belum lengkap
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +40,7 @@ export default function AdminLoginPage() {
 
     try {
       const supabase = createClient();
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password,
       });
@@ -35,9 +48,13 @@ export default function AdminLoginPage() {
       if (error) {
         if (error.message.includes('Invalid login credentials')) {
           setErrorMessage('Email atau kata sandi salah. Silakan periksa kembali.');
+        } else if (error.message.toLowerCase().includes('email not confirmed')) {
+          setErrorMessage(
+            'Email belum dikonfirmasi di Supabase. Silakan buka menu Authentication → Users di Dashboard Supabase, dan pastikan centang "Auto Confirm User?" saat menambahkan user.'
+          );
         } else if (error.message.includes('fetch')) {
           setErrorMessage(
-            'Gagal menghubungi server Supabase. Pastikan koneksi internet aktif dan variabel lingkungan Supabase sudah terkonfigurasi.'
+            'Gagal menghubungi server Supabase. Pastikan koneksi internet aktif dan restart server development lokal (npm run dev).'
           );
         } else {
           setErrorMessage(error.message);
@@ -46,9 +63,17 @@ export default function AdminLoginPage() {
         return;
       }
 
-      // Login berhasil, refresh router dan arahkan ke dashboard
-      router.push('/admin/dashboard');
-      router.refresh();
+      if (!data?.session) {
+        setErrorMessage(
+          'Sesi login tidak terbentuk. Pastikan akun admin telah berstatus confirmed di Supabase.'
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      // Login berhasil: gunakan window.location.href agar seluruh cookie sesi terkirim segar ke middleware server
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- Hard navigation diperlukan agar seluruh cookie sesi Supabase terkirim utuh ke middleware server
+      window.location.href = '/admin/dashboard';
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       setErrorMessage(`Terjadi kesalahan sistem: ${msg}`);

@@ -1,11 +1,20 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import { getWhatsAppConsultationUrl } from '@/lib/whatsapp';
 
 export const Footer: React.FC = () => {
+  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
+
+  // Sembunyikan Footer di seluruh halaman admin
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <footer className="border-t border-[#262420] bg-[#0a0a0a] text-[#f2f0ea]">

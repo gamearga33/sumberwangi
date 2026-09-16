@@ -22,6 +22,11 @@ export const Navbar: React.FC = () => {
     return pathname.startsWith(href);
   };
 
+  // Sembunyikan Navbar di seluruh halaman admin
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[#262420] bg-[#0d0d0d]/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 h-18">
