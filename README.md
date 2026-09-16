@@ -1,6 +1,6 @@
 # Sumber Wangi — Website Company Profile & Katalog Parfum
 
-Website company profile dan katalog produk untuk **Sumber Wangi**, brand parfum artisanal lokal dengan bibit konsentrat wewangian murni berkualitas tinggi yang tahan 12 hingga 14+ jam.
+Website company profile dan katalog produk untuk **CV Sumber Wangi Madiun Group**, brand parfum dengan bibit konsentrat wewangian murni berkualitas tinggi yang tahan 12 hingga 14+ jam dengan harga terjangkau Rp20.000.
 
 Aplikasi ini menggunakan integrasi pemesanan langsung melalui WhatsApp (`wa.me`) dengan pesan terformat otomatis, serta menggunakan **PocketBase** sebagai backend, database SQLite, dan manajemen file storage.
 
@@ -21,9 +21,9 @@ Aplikasi ini menggunakan integrasi pemesanan langsung melalui WhatsApp (`wa.me`)
 ```
 sumberwangi/
 ├── app/
-│   ├── page.tsx                      # Beranda (Hero, Unggulan, Alur Belanja, Filosofi)
+│   ├── page.tsx                      # Beranda (Hero Logo, Unggulan, Alur Belanja, Filosofi)
 │   ├── produk/
-│   │   ├── page.tsx                  # Katalog lengkap dengan filter kategori
+│   │   ├── page.tsx                  # Katalog lengkap 11 varian dengan filter kategori
 │   │   ├── loading.tsx               # State loading skeleton untuk katalog
 │   │   └── [slug]/
 │   │       ├── page.tsx              # Detail produk & tombol besar pemesanan WhatsApp
@@ -34,9 +34,9 @@ sumberwangi/
 │   ├── layout.tsx                    # Root layout (Navbar, Footer, SEO metadata)
 │   └── globals.css                   # Tailwind theme styling
 ├── components/
-│   ├── Navbar.tsx                    # Header responsif dengan drawer mobile
-│   ├── Footer.tsx                    # Footer lengkap dengan USP & link cepat
-│   ├── ProductCard.tsx               # Kartu parfum interaktif & tombol pesan WA
+│   ├── Navbar.tsx                    # Header responsif dengan logo resmi
+│   ├── Footer.tsx                    # Footer lengkap dengan USP & kontak resmi
+│   ├── ProductCard.tsx               # Kartu parfum Black & Gold & tombol pesan WA
 │   ├── WhatsAppButton.tsx            # Tombol pesanan & konsultasi wa.me
 │   ├── LoadingSkeleton.tsx           # Komponen skeleton placeholder
 │   └── ErrorMessage.tsx              # Komponen fallback jika data gagal dimuat
@@ -52,8 +52,8 @@ sumberwangi/
 │   ├── pb_data/                      # Database SQLite lokal (git-ignored)
 │   └── pb_migrations/                # Skema migrasi snapshot PocketBase
 ├── scripts/
-│   ├── setup-db.js                   # Script inisialisasi schema & seed produk awal
-│   └── assets/                       # Aset foto botol parfum awal
+│   ├── setup-db.js                   # Script inisialisasi schema & seed 11 varian resmi
+│   └── assets/                       # Aset foto 11 botol parfum resmi
 ├── .env.example                      # Template environment variables
 ├── .env.local                        # Konfigurasi environment lokal (git-ignored)
 ├── DECISIONS.md                      # Catatan keputusan teknis mandiri
@@ -73,10 +73,10 @@ cp .env.example .env.local
 
 Isi variabel berikut:
 
-| Variabel | Keterangan | Contoh Nilai Lokal |
+| Variabel | Keterangan | Nilai Resmi / Lokal |
 |---|---|---|
 | `NEXT_PUBLIC_POCKETBASE_URL` | URL endpoint backend PocketBase | `http://127.0.0.1:8090` |
-| `NEXT_PUBLIC_WA_NUMBER` | Nomor WhatsApp tujuan pesanan (format internasional tanpa `+` atau spasi) | `6281234567890` |
+| `NEXT_PUBLIC_WA_NUMBER` | Nomor WhatsApp tujuan pesanan (format internasional) | `6281333226161` |
 
 ---
 
