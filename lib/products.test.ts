@@ -25,3 +25,36 @@ describe('getProductImageUrl', () => {
     expect(getProductImageUrl({})).toBe('/images/logo.png');
   });
 });
+
+describe('isSupabaseConfigured', () => {
+  it('harus mendeteksi jika URL atau Anon Key masih berupa placeholder atau kosong', async () => {
+    const { isSupabaseConfigured } = await import('./products');
+    const originalUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const originalKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    try {
+      // 1. Kedua env kosong
+      delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+      delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+      expect(isSupabaseConfigured()).toBe(false);
+
+      // 2. URL placeholder
+      process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://placeholder.supabase.co';
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'real-anon-key';
+      expect(isSupabaseConfigured()).toBe(false);
+
+      // 3. Anon key placeholder
+      process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://real-project.supabase.co';
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'placeholder-anon-key';
+      expect(isSupabaseConfigured()).toBe(false);
+
+      // 4. Keduanya terkonfigurasi dengan benar
+      process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://real-project.supabase.co';
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'eyJh...real-key';
+      expect(isSupabaseConfigured()).toBe(true);
+    } finally {
+      process.env.NEXT_PUBLIC_SUPABASE_URL = originalUrl;
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = originalKey;
+    }
+  });
+});

@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowUpRight } from 'lucide-react';
 import { getProductBySlug, getAvailableProducts, getProductImageUrl } from '@/lib/products';
 import { formatRupiah } from '@/lib/utils';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
+import { ErrorMessage } from '@/components/ErrorMessage';
 import { getWhatsAppConsultationUrl } from '@/lib/whatsapp';
 
 export const revalidate = 60; // ISR revalidation interval
@@ -52,7 +53,30 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
-  const { data: product } = await getProductBySlug(resolvedParams.slug);
+  const { data: product, error } = await getProductBySlug(resolvedParams.slug);
+
+  if (error && !product) {
+    return (
+      <div className="min-h-screen bg-[#0d0d0d] text-[#f2f0ea] py-16">
+        <div className="mx-auto max-w-2xl px-6">
+          <ErrorMessage
+            title="Detail produk tidak dapat dimuat"
+            message={error}
+            showWhatsAppFallback={true}
+          />
+          <div className="mt-8 text-center">
+            <Link
+              href="/produk"
+              className="inline-flex items-center gap-1.5 text-xs uppercase tracking-wider text-[#d4af37] hover:underline"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              <span>Kembali ke Katalog</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     notFound();

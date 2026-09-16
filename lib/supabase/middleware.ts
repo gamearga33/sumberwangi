@@ -56,14 +56,22 @@ export async function updateSession(request: NextRequest) {
   if (isAccessingAdmin && !isLoginPage && !user) {
     const url = request.nextUrl.clone();
     url.pathname = '/admin/login';
-    return NextResponse.redirect(url);
+    const redirectResponse = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value);
+    });
+    return redirectResponse;
   }
 
   // Jika sudah login tapi mengakses /admin/login, redirect ke dashboard
   if (isLoginPage && user) {
     const url = request.nextUrl.clone();
     url.pathname = '/admin/dashboard';
-    return NextResponse.redirect(url);
+    const redirectResponse = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value);
+    });
+    return redirectResponse;
   }
 
   return supabaseResponse;
