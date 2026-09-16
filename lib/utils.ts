@@ -76,7 +76,8 @@ export function validateProductData(
   }
 
   // Validasi Gambar utama (wajib saat create baru)
-  if (!isUpdate && !data.image) {
+  const hasImage = Boolean(data.image || data.image_file || data.image_url);
+  if (!isUpdate && !hasImage) {
     errors.image = 'Gambar utama produk wajib diunggah';
   }
 

@@ -2,20 +2,18 @@ export type ProductCategory = 'Pria' | 'Wanita' | 'Unisex';
 
 export interface Product {
   id: string;
-  collectionId: string;
-  collectionName: string;
   name: string;
   slug: string;
   description: string;
   price: number;
-  size_ml?: number;
-  image: string;
-  image_gallery?: string[];
-  category?: ProductCategory;
+  size_ml?: number | null;
+  image_url: string;
+  image_gallery_urls?: string[] | null;
+  category?: ProductCategory | null;
   is_available: boolean;
   is_featured?: boolean;
-  created: string;
-  updated: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ProductFormData {
@@ -23,12 +21,15 @@ export interface ProductFormData {
   slug: string;
   description: string;
   price: number;
-  size_ml?: number;
-  category?: ProductCategory;
+  size_ml?: number | null;
+  category?: ProductCategory | null;
   is_available: boolean;
   is_featured?: boolean;
-  image?: File | null;
-  image_gallery?: File[];
+  image_url?: string;
+  image_file?: File | null;
+  image?: File | null; // Dukungan backward compatibility test
+  image_gallery_urls?: string[];
+  image_gallery_files?: File[];
 }
 
 export interface FormValidationResult {
