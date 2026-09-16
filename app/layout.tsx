@@ -24,7 +24,13 @@ export const metadata: Metadata = {
   description:
     'CV Sumber Wangi Madiun Group — Parfum artisanal dengan konsentrasi bibit wewangian murni berkarakter mewah dan tahan hingga 14+ jam.',
   icons: {
-    icon: '/images/logo.png',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png', sizes: '32x32' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
 };
 
