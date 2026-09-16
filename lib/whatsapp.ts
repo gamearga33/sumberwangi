@@ -1,6 +1,6 @@
 import { formatRupiah } from './utils';
 
-export const DEFAULT_WA_NUMBER = '6281234567890';
+export const DEFAULT_WA_NUMBER = '6281333226161';
 
 /**
  * Normalisasi nomor WhatsApp ke format internasional (misal 6281234567890)

@@ -13,18 +13,18 @@ describe('normalizeWhatsAppNumber', () => {
     expect(normalizeWhatsAppNumber(undefined)).toBe(DEFAULT_WA_NUMBER);
   });
 
-  it('harus mengubah nomor lokal 0812... menjadi 62812...', () => {
-    expect(normalizeWhatsAppNumber('081234567890')).toBe('6281234567890');
+  it('harus mengubah nomor lokal 081333226161 menjadi 6281333226161', () => {
+    expect(normalizeWhatsAppNumber('081333226161')).toBe('6281333226161');
   });
 
   it('harus membersihkan karakter spesial seperti spasi, plus, dan tanda hubung', () => {
-    expect(normalizeWhatsAppNumber('+62 812-3456-7890')).toBe('6281234567890');
-    expect(normalizeWhatsAppNumber('0812 3456 7890')).toBe('6281234567890');
-    expect(normalizeWhatsAppNumber('(0812) 3456-7890')).toBe('6281234567890');
+    expect(normalizeWhatsAppNumber('+62 813-3322-6161')).toBe('6281333226161');
+    expect(normalizeWhatsAppNumber('0813 3322 6161')).toBe('6281333226161');
+    expect(normalizeWhatsAppNumber('(0813) 3322-6161')).toBe('6281333226161');
   });
 
   it('harus mempertahankan format 62 jika sudah benar', () => {
-    expect(normalizeWhatsAppNumber('6289876543210')).toBe('6289876543210');
+    expect(normalizeWhatsAppNumber('6281333226161')).toBe('6281333226161');
   });
 });
 
@@ -45,14 +45,14 @@ describe('generateWhatsAppMessage', () => {
 });
 
 describe('getWhatsAppOrderUrl', () => {
-  it('harus menghasilkan URL wa.me yang di-encode dengan benar', () => {
+  it('harus menghasilkan URL wa.me yang di-encode dengan benar dengan nomor owner', () => {
     const url = getWhatsAppOrderUrl({
       productName: 'Sumber Wangi - Oud Royale',
       price: 185000,
-      customNumber: '081234567890',
+      customNumber: '081333226161',
     });
 
-    expect(url).toContain('https://wa.me/6281234567890?text=');
+    expect(url).toContain('https://wa.me/6281333226161?text=');
     expect(url).toContain(encodeURIComponent('Sumber Wangi - Oud Royale'));
     expect(url).toContain(encodeURIComponent('Rp185.000'));
   });
@@ -61,20 +61,19 @@ describe('getWhatsAppOrderUrl', () => {
     const url = getWhatsAppOrderUrl({
       productName: 'Parfum "Eksotis" & Segar (50% Pure)',
       price: 250000,
-      customNumber: '6281234567890',
+      customNumber: '6281333226161',
     });
 
-    // Harus valid URL tanpa karakter mentah terlarang
     expect(url).not.toContain('"');
     expect(url).not.toContain(' ');
-    expect(url).toContain('https://wa.me/6281234567890?text=');
+    expect(url).toContain('https://wa.me/6281333226161?text=');
   });
 });
 
 describe('getWhatsAppConsultationUrl', () => {
-  it('harus menghasilkan link konsultasi umum', () => {
-    const url = getWhatsAppConsultationUrl('081234567890');
-    expect(url).toContain('https://wa.me/6281234567890?text=');
+  it('harus menghasilkan link konsultasi umum dengan nomor owner', () => {
+    const url = getWhatsAppConsultationUrl('081333226161');
+    expect(url).toContain('https://wa.me/6281333226161?text=');
     expect(url).toContain(encodeURIComponent('konsultasi'));
   });
 });

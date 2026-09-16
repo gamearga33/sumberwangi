@@ -24,10 +24,8 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
 - **Keputusan:** Menggunakan Vitest sebagai runner pengujian unit test untuk `lib/whatsapp.ts`, `lib/utils.ts`, dan validasi produk.
 - **Alasan:** Sangat cepat, kompatibel penuh dengan konfigurasi TypeScript dan arsitektur ESM Next.js, dan langsung lulus tanpa konfigurasi Babel yang rumit.
 
-## 2026-09-16 — Overhaul Desain: Modern Minimalist Typography & Anti-AI Cliché
-- **Keputusan:** Mengubah total gaya visual dari gaya template AI (banyak ikon sparkles, pill badges mengambang, efek glow blur, dan gradient text) menjadi gaya **Modern Minimalist Editorial** yang terinspirasi dari rumah wewangian artisanal kontemporer (seperti Le Labo, Byredo, Aesop).
-- **Perubahan yang Diterapkan:**
-  1. **Tipografi Modern:** Menggunakan Geist Sans modern geometric sans-serif dengan penekanan pada letter-spacing (`tracking-tight` pada judul dan `tracking-wider`/`tracking-[0.22em]` pada logotype dan kategori), menggantikan serif tradisional.
-  2. **Pembersihan Elemen AI:** Menghapus seluruh ikon sparkles, pill badge mengambang ("Ready Stock", "Signature Blend", "Koleksi Terfavorit"), dan kotak nomor proses belanja yang mencolok.
-  3. **Palet Warna Tenang:** Menghilangkan text gradient emas dan glow blur; menggunakan warna dasar warm neutral (`#fbfbf9`), border halus (`#e8e6df`), dan kontras teks matte black (`#141413`).
-  4. **Tata Letak Bersih:** Alur informasi dibuat editorial, rapi, dan memberikan ruang bernapas (whitespace) yang luas pada katalog dan halaman detail produk.
+## 2026-09-16 — Integrasi Logo Resmi, Warna Hitam & Gold, serta Nomor WhatsApp Owner
+- **Keputusan:** Mengadaptasi identitas brand resmi sesuai request owner:
+  1. **Logo Resmi:** Menggunakan file logo resmi CV Sumber Wangi Madiun Group (`/images/logo.png`) pada Navbar, Footer, dan Favicon.
+  2. **Tema Hitam & Gold:** Mengaplikasikan tema warna luxury dark mode dengan background obsidian black (`#0d0d0d`), surface `#141414`, border halus `#262420`, aksen emas artisanal murni (`#d4af37`), serta teks lembut yang mudah dibaca (`#f2f0ea` dan `#a3a099`). Desain tetap dijaga minimalis, bersih, tanpa efek glow/sparkles berlebihan.
+  3. **Nomor WhatsApp Resmi:** Menggunakan nomor `081333226161` (format internasional `6281333226161`) di `.env.local`, `.env.example`, helper `lib/whatsapp.ts`, serta test suite `lib/whatsapp.test.ts`.

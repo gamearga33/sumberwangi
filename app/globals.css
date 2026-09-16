@@ -1,31 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fbfbf9;
-  --foreground: #141413;
-  --muted: #706f6a;
-  --border: #e8e6df;
-  --card-bg: #ffffff;
+  --background: #0d0d0d;
+  --foreground: #f2f0ea;
+  --gold-primary: #d4af37;
+  --gold-light: #e8c96c;
+  --gold-muted: #967b3f;
+  --card-bg: #141414;
+  --card-border: #262420;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-border: var(--border);
+  --color-gold: var(--gold-primary);
+  --color-gold-light: var(--gold-light);
+  --color-gold-muted: var(--gold-muted);
   --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
   --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background-color: #0d0d0d;
+  color: #f2f0ea;
   font-family: var(--font-sans);
   letter-spacing: -0.01em;
 }
 
-/* Halus scroll dan seleksi */
+/* Custom Gold Selection */
 ::selection {
-  background-color: #141413;
-  color: #fbfbf9;
+  background-color: #d4af37;
+  color: #0d0d0d;
 }

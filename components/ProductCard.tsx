@@ -14,59 +14,60 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const imageUrl = getProductImageUrl(product);
 
   return (
-    <div className="group flex flex-col">
+    <div className="group flex flex-col bg-[#141414] border border-[#262420] transition-colors duration-300 hover:border-[#d4af37]/50">
       {/* Product Image Frame */}
       <Link
         href={`/produk/${product.slug}`}
-        className="relative aspect-square w-full overflow-hidden bg-[#f4f3ef]"
+        className="relative aspect-square w-full overflow-hidden bg-[#1a1918]"
       >
         <Image
           src={imageUrl}
           alt={product.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-103"
+          className="object-cover transition-transform duration-500 group-hover:scale-103 opacity-95 group-hover:opacity-100"
           priority={false}
         />
       </Link>
 
       {/* Product Info */}
-      <div className="flex flex-1 flex-col pt-3 pb-1">
+      <div className="flex flex-1 flex-col p-4">
         {/* Subtle Category & Size */}
-        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-[#706f6a]">
+        <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-[#d4af37]">
           {product.category && <span>{product.category}</span>}
           {product.category && product.size_ml && <span>·</span>}
           {product.size_ml && <span>{product.size_ml} ml</span>}
+          <span>· EDP</span>
         </div>
 
         {/* Title */}
         <Link
           href={`/produk/${product.slug}`}
-          className="mt-1 text-sm sm:text-base font-medium text-[#141413] tracking-tight hover:opacity-70 transition-opacity"
+          className="mt-1.5 text-sm sm:text-base font-medium text-[#f2f0ea] tracking-tight hover:text-[#d4af37] transition-colors"
         >
           {product.name}
         </Link>
 
         {/* Price & Action */}
-        <div className="mt-2 flex items-center justify-between pt-2 border-t border-[#e8e6df]">
-          <span className="text-sm font-semibold text-[#141413]">
+        <div className="mt-3 flex items-center justify-between pt-3 border-t border-[#262420]">
+          <span className="text-sm font-semibold text-[#d4af37]">
             {formatRupiah(product.price)}
           </span>
 
           <div className="flex items-center gap-2">
             <Link
               href={`/produk/${product.slug}`}
-              className="text-xs uppercase tracking-wider text-[#706f6a] hover:text-[#141413] transition-colors"
+              className="text-xs uppercase tracking-wider text-[#9c9991] hover:text-[#f2f0ea] transition-colors"
             >
               Detail
             </Link>
-            <span className="text-stone-300">/</span>
+            <span className="text-[#3b3832]">/</span>
             <WhatsAppButton
               productName={product.name}
               price={product.price}
               label="Pesan"
               variant="compact"
-              className="text-[11px] px-2.5 py-1 tracking-wider uppercase"
+              className="text-[11px] px-2.5 py-1 tracking-wider uppercase font-semibold"
             />
           </div>
         </div>

@@ -17,17 +17,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Sumber Wangi — Koleksi Parfum Artisanal',
+  title: 'Sumber Wangi Madiun Group — Artisanal Perfumery',
   description:
-    'Brand parfum artisanal Indonesia dengan bibit wewangian murni berkonsentrasi tinggi. Karakter aroma elegan dan tahan lama.',
-  keywords: [
-    'Sumber Wangi',
-    'parfum lokal',
-    'parfum pria',
-    'parfum wanita',
-    'parfum tahan lama',
-    'parfum artisanal',
-  ],
+    'CV Sumber Wangi Madiun Group — Parfum artisanal dengan konsentrasi bibit wewangian murni berkarakter mewah dan tahan hingga 14+ jam.',
+  icons: {
+    icon: '/images/logo.png',
+  },
 };
 
 export default function RootLayout({
@@ -36,8 +31,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-[#fbfbf9] text-[#141413]">
+    <html lang="id" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}>
+      <body className="min-h-full flex flex-col bg-[#0d0d0d] text-[#f2f0ea]">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

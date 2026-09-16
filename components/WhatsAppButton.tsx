@@ -30,22 +30,22 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
     ? 'Konsultasi WhatsApp'
     : label || 'Pesan via WhatsApp';
 
-  // Minimalist modern styling
+  // Black & Gold Theme Styling
   const variantStyles = {
     primary:
-      'bg-[#141413] text-[#fbfbf9] hover:bg-[#2c2b28] transition-colors font-medium',
+      'bg-[#d4af37] text-[#0d0d0d] hover:bg-[#e2bd46] active:bg-[#c5a059] font-medium transition-colors',
     secondary:
-      'bg-[#2c2b28] text-white hover:bg-[#141413] transition-colors font-medium',
+      'bg-[#1f1d19] text-[#f2f0ea] border border-[#3b372e] hover:border-[#d4af37] transition-colors font-medium',
     outline:
-      'border border-[#141413] text-[#141413] hover:bg-[#141413] hover:text-[#fbfbf9] transition-colors font-medium',
+      'border border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37] hover:text-[#0d0d0d] transition-colors font-medium',
     compact:
-      'bg-[#141413] text-[#fbfbf9] hover:bg-[#2c2b28] transition-colors font-medium text-xs px-3 py-1.5',
+      'bg-[#d4af37] text-[#0d0d0d] hover:bg-[#e2bd46] transition-colors font-medium text-xs px-3 py-1.5',
   };
 
   const sizeStyles = {
     sm: 'text-xs px-3 py-2 gap-1.5',
     md: 'text-xs uppercase tracking-wider px-5 py-3 gap-2',
-    lg: 'text-xs uppercase tracking-wider px-7 py-3.5 gap-2.5 font-medium',
+    lg: 'text-xs uppercase tracking-wider px-7 py-3.5 gap-2.5 font-semibold',
   };
 
   const currentSize = variant === 'compact' ? '' : sizeStyles[size];
