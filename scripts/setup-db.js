@@ -127,84 +127,142 @@ async function run() {
     productsCollection = await createRes.json();
     console.log(`[setup-db] Koleksi 'products' berhasil dibuat dengan ID ${productsCollection.id}`);
   } else {
-    console.log(`[setup-db] Koleksi 'products' sudah ada (ID: ${productsCollection.id}), memperbarui rules...`);
-    await fetch(`${PB_URL}/api/collections/${productsCollection.id}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        listRule: '',
-        viewRule: '',
-        createRule: "@request.auth.id != ''",
-        updateRule: "@request.auth.id != ''",
-        deleteRule: "@request.auth.id != ''",
-      }),
-    });
+    console.log(`[setup-db] Koleksi 'products' sudah ada (ID: ${productsCollection.id})`);
   }
 
-  // 3. Cek apakah sudah ada data produk
-  const listRes = await fetch(`${PB_URL}/api/collections/products/records?perPage=1`, {
+  // 3. Hapus data produk lama agar sinkron dengan daftar varian baru dari user
+  console.log('[setup-db] Membersihkan data produk lama...');
+  const existingRes = await fetch(`${PB_URL}/api/collections/products/records?perPage=100`, {
     headers: { Authorization: token },
   });
-  const listData = await listRes.json();
-
-  if (listData.totalItems > 0) {
-    console.log(`[setup-db] Sudah ada ${listData.totalItems} produk di database. Skip seed.`);
-    return;
+  const existingData = await existingRes.json();
+  if (existingData.items && existingData.items.length > 0) {
+    for (const item of existingData.items) {
+      await fetch(`${PB_URL}/api/collections/products/records/${item.id}`, {
+        method: 'DELETE',
+        headers: { Authorization: token },
+      });
+    }
+    console.log(`[setup-db] ${existingData.items.length} produk lama berhasil dibersihkan.`);
   }
 
-  console.log('[setup-db] Melakukan seed data produk awal Sumber Wangi...');
+  console.log('[setup-db] Memasukkan 11 varian parfum resmi Sumber Wangi...');
 
-  const sampleProducts = [
+  // 11 Varian resmi dari owner sesuai HTML
+  const officialProducts = [
     {
-      name: 'Sumber Wangi - Oud Royale',
-      slug: 'oud-royale',
-      description:
-        '<p><strong>Oud Royale</strong> adalah mahakarya wewangian mewah persembahan Sumber Wangi. Memadukan keagungan kayu gaharu (oud) Nusantara berkualitas tinggi dengan kehangatan amber murni dan sentuhan manis mawar Damaskus.</p><p>Memberikan aura berkarisma, misterius, dan meninggalkan jejak keharuman elegan yang bertahan hingga lebih dari 14 jam. Pilihan sempurna untuk perayaan istimewa dan kehadiran berkesan di setiap pertemuan penting.</p><p><strong>Fragrance Notes:</strong><br/>• Top: Damask Rose, Saffron, Fresh Bergamot<br/>• Middle: Cambodian Agarwood (Oud), Indonesian Patchouli<br/>• Base: Warm Amber, Madagascar Vanilla, Sandalwood</p>',
-      price: 185000,
-      size_ml: 50,
-      category: 'Unisex',
-      is_available: true,
-      imageFile: 'oud-royale.jpg',
-    },
-    {
-      name: 'Sumber Wangi - Jasmine Sensual',
-      slug: 'jasmine-sensual',
-      description:
-        '<p><strong>Jasmine Sensual</strong> menghadirkan pesona anggun keharuman melati putih Indonesia pilihan. Dikombinasikan dengan sentuhan kesegaran citrus bergamot di awal dan diakhiri dengan kehangatan lembut white musk yang memikat.</p><p>Karakter aromanya menenangkan, feminin, dan memancarkan kecantikan abadi tanpa aroma yang berlebihan. Sangat ideal untuk penggunaan harian di kantor, kencan romantis, hingga santai sore.</p><p><strong>Fragrance Notes:</strong><br/>• Top: Italian Bergamot, Dewy Green Leaves<br/>• Middle: Indonesian Sambac Jasmine, Royal Tuberose<br/>• Base: White Musk, Soft Cedarwood, Tonka Bean</p>',
-      price: 165000,
-      size_ml: 50,
+      name: 'Romanwish',
+      slug: 'romanwish',
       category: 'Wanita',
-      is_available: true,
-      imageFile: 'jasmine-sensual.jpg',
+      price: 20000,
+      size_ml: 35,
+      description:
+        '<p>Aroma feminin, manis, lembut dan romantis. Karakter wangi manis yang menawan, memberikan nuansa hangat dan menyenangkan untuk menemani aktivitas harian Anda.</p><p><strong>Karakter Aroma:</strong> Manis, Floral Lembut, Romantis<br/><strong>Daya Tahan:</strong> 12 - 14+ Jam<br/><strong>Konsentrasi:</strong> Eau De Parfum</p>',
+      imageFile: 'romanwish.jpg',
     },
     {
-      name: 'Sumber Wangi - Citrus Bloom',
-      slug: 'citrus-bloom',
-      description:
-        '<p><strong>Citrus Bloom</strong> adalah hembusan energi segar yang membangkitkan semangat. Perpaduan harmonis antara segarnya jeruk mandarin tropis, lemon zest, dan daun teh hijau pegunungan yang menyejukkan.</p><p>Dirancang khusus untuk menemani gaya hidup aktif di iklim tropis, memberikan sensasi dingin yang menyegarkan sejak semprotan pertama dan menjaga tubuh tetap segar wangi seharian.</p><p><strong>Fragrance Notes:</strong><br/>• Top: Mandarin Orange, Sicilian Lemon, Crisp Apple<br/>• Middle: Green Tea Leaf, Orange Blossom, Neroli<br/>• Base: Clean Vetiver, Soft White Amber</p>',
-      price: 145000,
-      size_ml: 30,
-      category: 'Unisex',
-      is_available: true,
-      imageFile: 'citrus-bloom.jpg',
-    },
-    {
-      name: 'Sumber Wangi - Midnight Gentleman',
-      slug: 'midnight-gentleman',
-      description:
-        '<p><strong>Midnight Gentleman</strong> memancarkan wibawa dan maskulinitas sejati. Dibuka dengan kesegaran pedas lada hitam dan kapulaga, disusul kehangatan daun tembakau cerutu pilihan dan aroma kulit (leather) yang memikat.</p><p>Aroma pekat yang berkelas ini ditutup dengan keanggunan kayu cedar dan dark patchouli, menjadikannya senjata andalan pria percaya diri untuk malam hari yang berkesan.</p><p><strong>Fragrance Notes:</strong><br/>• Top: Black Pepper, Cardamom, Pink Peppercorn<br/>• Middle: Tobacco Leaf, Aged Leather, Iris<br/>• Base: Virginia Cedarwood, Dark Amber, Patchouli</p>',
-      price: 195000,
-      size_ml: 50,
+      name: 'Bulgari Aqua',
+      slug: 'bulgari-aqua',
       category: 'Pria',
-      is_available: true,
-      imageFile: 'midnight-gentleman.jpg',
+      price: 20000,
+      size_ml: 35,
+      description:
+        '<p>Aroma fresh, aquatic dan bersih. Sensasi kesegaran laut yang maskulin, dinamis, dan memberikan rasa percaya diri serta kesegaran maksimal sepanjang hari.</p><p><strong>Karakter Aroma:</strong> Fresh Aquatic, Marine, Bersih<br/><strong>Daya Tahan:</strong> 12 - 14+ Jam<br/><strong>Konsentrasi:</strong> Eau De Parfum</p>',
+      imageFile: 'bulgari-aqua.jpg',
+    },
+    {
+      name: 'Nagita',
+      slug: 'nagita',
+      category: 'Wanita',
+      price: 20000,
+      size_ml: 35,
+      description:
+        '<p>Aroma feminin, manis dan elegan. Sentuhan floral dan gourmand berkelas yang memancarkan aura anggun, mewah, dan memikat tanpa rasa berlebihan.</p><p><strong>Karakter Aroma:</strong> Manis, Mewah, Elegan<br/><strong>Daya Tahan:</strong> 12 - 14+ Jam<br/><strong>Konsentrasi:</strong> Eau De Parfum</p>',
+      imageFile: 'nagita.jpg',
+    },
+    {
+      name: 'Vanilla Ice',
+      slug: 'vanilla-ice',
+      category: 'Unisex',
+      price: 20000,
+      size_ml: 35,
+      description:
+        '<p>Aroma vanilla manis, lembut dan hangat. Perpaduan keharuman vanilla manis berpadu sensasi dingin segar yang menenangkan dan ramah digunakan siapa saja.</p><p><strong>Karakter Aroma:</strong> Sweet Vanilla, Cool, Comforting<br/><strong>Daya Tahan:</strong> 12 - 14+ Jam<br/><strong>Konsentrasi:</strong> Eau De Parfum</p>',
+      imageFile: 'vanilla-ice.jpg',
+    },
+    {
+      name: 'Melati Keraton',
+      slug: 'melati-keraton',
+      category: 'Wanita',
+      price: 20000,
+      size_ml: 35,
+      description:
+        '<p>Aroma melati lembut, anggun dan klasik. Keharuman melati tradisional Nusantara yang khas, sejuk, dan memancarkan wibawa kecantikan putri keraton.</p><p><strong>Karakter Aroma:</strong> White Floral, Melati Tradisional, Anggun<br/><strong>Daya Tahan:</strong> 12 - 14+ Jam<br/><strong>Konsentrasi:</strong> Eau De Parfum</p>',
+      imageFile: 'melati-keraton.jpg',
+    },
+    {
+      name: 'Harajuku Love',
+      slug: 'harajuku-love',
+      category: 'Wanita',
+      price: 20000,
+      size_ml: 35,
+      description:
+        '<p>Aroma manis, fruity dan ceria. Sentuhan buah-buahan manis segar yang memberi energi dan keceriaan di setiap momen pergaulan dan aktivitas harian.</p><p><strong>Karakter Aroma:</strong> Fruity Sweet, Ceria, Segar<br/><strong>Daya Tahan:</strong> 12 - 14+ Jam<br/><strong>Konsentrasi:</strong> Eau De Parfum</p>',
+      imageFile: 'harajuku-love.jpg',
+    },
+    {
+      name: 'Sakura',
+      slug: 'sakura',
+      category: 'Wanita',
+      price: 20000,
+      size_ml: 35,
+      description:
+        '<p>Aroma floral lembut, fresh dan feminin. Kesegaran kelopak bunga sakura musim semi yang mekar anggun, menenangkan dan memikat tanpa menusuk hidung.</p><p><strong>Karakter Aroma:</strong> Soft Floral, Fresh Spring, Feminin<br/><strong>Daya Tahan:</strong> 12 - 14+ Jam<br/><strong>Konsentrasi:</strong> Eau De Parfum</p>',
+      imageFile: 'sakura.jpg',
+    },
+    {
+      name: 'Avril',
+      slug: 'avril',
+      category: 'Wanita',
+      price: 20000,
+      size_ml: 35,
+      description:
+        '<p>Aroma feminin, lembut dan elegan. Wangi manis lembut yang memancarkan karisma modern, bebas, dan percaya diri sepanjang hari.</p><p><strong>Karakter Aroma:</strong> Soft Elegant, Floral Gourmand<br/><strong>Daya Tahan:</strong> 12 - 14+ Jam<br/><strong>Konsentrasi:</strong> Eau De Parfum</p>',
+      imageFile: 'avril.jpg',
+    },
+    {
+      name: 'Shisi',
+      slug: 'shisi',
+      category: 'Unisex',
+      price: 20000,
+      size_ml: 35,
+      description:
+        '<p>Aroma fresh, ringan dan nyaman. Kesegaran lembut yang netral dan menyejukkan, cocok untuk pria maupun wanita yang menyukai wangi bersih seharian.</p><p><strong>Karakter Aroma:</strong> Clean Fresh, Ringan, Menyejukkan<br/><strong>Daya Tahan:</strong> 12 - 14+ Jam<br/><strong>Konsentrasi:</strong> Eau De Parfum</p>',
+      imageFile: 'shisi.jpg',
+    },
+    {
+      name: 'JLO Still',
+      slug: 'jlo-still',
+      category: 'Wanita',
+      price: 20000,
+      size_ml: 35,
+      description:
+        '<p>Aroma floral, fresh dan feminin. Kombinasi aroma bunga putih segar dan sentuhan daun teh yang berkelas, bersih, dan memikat.</p><p><strong>Karakter Aroma:</strong> White Floral, Tea Note, Berkelas<br/><strong>Daya Tahan:</strong> 12 - 14+ Jam<br/><strong>Konsentrasi:</strong> Eau De Parfum</p>',
+      imageFile: 'jlo-still.jpg',
+    },
+    {
+      name: 'Dunhill Blue',
+      slug: 'dunhill-blue',
+      category: 'Pria',
+      price: 20000,
+      size_ml: 35,
+      description:
+        '<p>Aroma fresh, clean dan maskulin. Wangi segar sitrun, embun pagi, dan kayu aromatik yang memancarkan ketegasan dan karisma pria modern.</p><p><strong>Karakter Aroma:</strong> Fresh Clean, Citrus Woody, Maskulin<br/><strong>Daya Tahan:</strong> 12 - 14+ Jam<br/><strong>Konsentrasi:</strong> Eau De Parfum</p>',
+      imageFile: 'dunhill-blue.jpg',
     },
   ];
 
-  for (const item of sampleProducts) {
+  for (const item of officialProducts) {
     const formData = new FormData();
     formData.append('name', item.name);
     formData.append('slug', item.slug);
@@ -212,7 +270,7 @@ async function run() {
     formData.append('price', String(item.price));
     formData.append('size_ml', String(item.size_ml));
     formData.append('category', item.category);
-    formData.append('is_available', String(item.is_available));
+    formData.append('is_available', 'true');
 
     const imagePath = path.join(__dirname, 'assets', item.imageFile);
     if (fs.existsSync(imagePath)) {
@@ -234,11 +292,11 @@ async function run() {
       console.error(`Gagal insert produk ${item.name}: ${insertRes.status} ${errText}`);
     } else {
       const created = await insertRes.json();
-      console.log(`[setup-db] Produk berhasil ditambahkan: ${created.name} (id: ${created.id}, slug: ${created.slug})`);
+      console.log(`[setup-db] Berhasil menambahkan: ${created.name} (${created.category} - Rp${created.price})`);
     }
   }
 
-  console.log('[setup-db] Selesai setup dan seed produk Sumber Wangi!');
+  console.log('[setup-db] Selesai sinkronisasi 11 varian parfum Sumber Wangi!');
 }
 
 run().catch((err) => {
