@@ -67,4 +67,6 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
   6. **Pengarsipan File Lama:** Memindahkan seluruh file deployment Fly.io dan binary PocketBase lama (`pocketbase-deploy/`, `pocketbase/`, `scripts/setup-db.js`) ke folder arsip `_archive/`.
 - **Alasan:** Fly.io telah menghapus tier gratis permanen (kebijakan baru mewajibkan pembayaran bulanan), sementara Render gratis tidak memiliki persistent disk (berisiko menghapus data SQLite dan foto setiap kali redeploy). Supabase menyediakan database Postgres dan Object Storage terkelola yang aman permanen di free tier tanpa risiko data hilang saat redeploy.
 
-
+## 2026-09-16 — Strategi Penanganan Auto-Pause 7 Hari Supabase Free Tier
+- **Keputusan:** Memilih **Opsi 2** (menerima mekanisme auto-pause free tier dengan panduan resume manual 1-klik di Dashboard Supabase pada `README.md`) serta menyediakan rekomendasi opsi setup scheduled ping gratis via `cron-job.org` bagi owner jika ingin project tetap terjaga aktif tanpa intervensi manual.
+- **Alasan:** Sesuai mandat `SUMBER_WANGI_SPEC.md` Bagian 2. Berbeda dari risiko ephemeral disk pada Render (yang menghapus permanen seluruh data dan foto saat restart), fitur auto-pause Supabase 100% menjamin integritas data (Postgres database dan file Storage tetap utuh dan aman). Untuk skala bisnis <20 varian parfum dan traffic awal, resume manual membutuhkan waktu kurang dari 1 menit, sehingga tidak membebani operasional owner.

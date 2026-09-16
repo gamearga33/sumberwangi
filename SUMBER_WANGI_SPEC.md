@@ -87,6 +87,7 @@ create table products (
   image_gallery_urls text[],
   category text,
   is_available boolean not null default true,
+  is_featured boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -117,6 +118,7 @@ for each row execute function update_updated_at_column();
 | `image_gallery_urls` | text[] | Tidak | Array URL gambar tambahan (opsional) |
 | `category` | text | Tidak | Misal "Pria", "Wanita", "Unisex" |
 | `is_available` | boolean | Ya (default true) | Untuk sembunyikan produk tanpa hapus data |
+| `is_featured` | boolean | Ya (default false) | Untuk menandai produk unggulan/populer di beranda |
 | `created_at` | timestamptz | Auto | Otomatis |
 | `updated_at` | timestamptz | Auto | Otomatis via trigger |
 

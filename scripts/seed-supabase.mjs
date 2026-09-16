@@ -35,14 +35,17 @@ function loadEnvLocal() {
 loadEnvLocal();
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-// Untuk seeding via script CLI, disarankan SUPABASE_SERVICE_ROLE_KEY (karena bypass RLS),
-// tapi jika tidak ada, fallback ke NEXT_PUBLIC_SUPABASE_ANON_KEY.
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const adminEmail = process.env.ADMIN_EMAIL;
+const adminPassword = process.env.ADMIN_PASSWORD;
+
+const supabaseKey = serviceRoleKey || anonKey;
 
 if (!supabaseUrl || !supabaseKey || supabaseUrl.includes('placeholder')) {
   console.error('❌ Supabase belum dikonfigurasi!');
   console.error('Pastikan NEXT_PUBLIC_SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY atau NEXT_PUBLIC_SUPABASE_ANON_KEY sudah diatur di .env.local.');
-  console.error('Alternatif: Anda dapat menjalankan skrip scripts/schema.sql dan scripts/seed.sql langsung di SQL Editor Supabase Dashboard.');
+  console.error('Alternatif: Anda dapat menjalankan skrip scripts/schema.sql dan scripts/seed.sql langsung di SQL Editor Supabase Dashboard (paling mudah & tanpa setup script).');
   process.exit(1);
 }
 
@@ -174,6 +177,23 @@ const productsData = [
 
 async function seed() {
   console.log(`[seed-supabase] Menghubungkan ke Supabase di ${supabaseUrl}...`);
+
+  if (!serviceRoleKey && adminEmail && adminPassword) {
+    console.log(`[seed-supabase] Mengautentikasi sebagai admin (${adminEmail})...`);
+    const { error: authErr } = await supabase.auth.signInWithPassword({
+      email: adminEmail,
+      password: adminPassword,
+    });
+    if (authErr) {
+      console.warn(`⚠️ Autentikasi admin gagal (${authErr.message}). Melanjutkan dengan anon key...`);
+    } else {
+      console.log(`✅ Berhasil login sebagai admin untuk upload dan insert.`);
+    }
+  } else if (!serviceRoleKey) {
+    console.log(
+      'ℹ️ Catatan: Menjalankan dengan anon key tanpa kredensial admin. Jika RLS menolak akses, jalankan scripts/seed.sql di SQL Editor Supabase Dashboard, atau setel SUPABASE_SERVICE_ROLE_KEY di .env.local.'
+    );
+  }
 
   for (const item of productsData) {
     let finalImageUrl = `/images/products/${item.imageFile}`;
