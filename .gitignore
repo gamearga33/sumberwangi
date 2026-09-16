@@ -37,3 +37,5 @@ next-env.d.ts
 /pocketbase/pocketbase.exe
 /pocketbase/pb_data/
 pb_data/
+_archive/pocketbase/pocketbase.exe
+_archive/pocketbase/pb_data/
