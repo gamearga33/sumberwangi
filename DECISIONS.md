@@ -42,3 +42,10 @@ Dokumen ini mencatat keputusan teknis mandiri yang diambil selama pengembangan p
   2. **Field `is_featured` untuk Pemilihan Manual Varian Populer:** Menambahkan kolom `is_featured` bertipe Boolean pada koleksi database PocketBase `products`. Fungsi `getFeaturedProducts` memprioritaskan produk dengan `is_available = true && is_featured = true`.
 - **Alasan:** Memenuhi preferensi visual owner agar logo tidak terkurung dalam kotak samping ("jangan ada kotak sampingnya"), serta memberikan kendali penuh bagi owner untuk memilih sendiri parfum mana yang tampil di Beranda via toggle checkbox `is_featured` di admin panel PocketBase tanpa perlu mengubah kode.
 
+## 2026-09-16 — Optimasi Gambar Bebas Kuota Vercel, Smooth Scroll, dan Halaman Tentang Kami
+- **Keputusan:**
+  1. **Unoptimized Images (`images.unoptimized = true`):** Mengaktifkan opsi `unoptimized: true` pada `next.config.ts`. Next.js merender tag `<img>` yang mengambil aset foto langsung dari storage PocketBase (atau file lokal) tanpa diproses melalui serverless image optimization proxy `/_next/image`.
+  2. **Alasan Optimasi Gambar:** Mencegah eror lokal HTTP 400 (`"url" parameter is not allowed`) dan memastikan penggunaan hosting Vercel tier gratis (Hobby plan) tidak akan pernah menyentuh kuota bulanan 1.000 image optimizations.
+  3. **Global Smooth Scroll:** Menambahkan `scroll-behavior: smooth` pada CSS global dan kelas `scroll-smooth` pada elemen `<html>` untuk pengalaman navigasi yang halus.
+  4. **Penyesuaian Halaman Tentang Kami:** Menghapus ikon logo kecil di samping teks judul header `CV SUMBER WANGI MADIUN GROUP` dan mengganti foto parfum ilustrasi pada editorial story dengan logo resmi transparan.
+

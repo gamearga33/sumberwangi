@@ -17,19 +17,9 @@ export default function TentangPage() {
       <div className="mx-auto max-w-4xl px-6 space-y-20">
         {/* Header Hero */}
         <div className="space-y-4">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="relative h-10 w-10 shrink-0">
-              <Image
-                src="/images/logo.png"
-                alt="Logo Sumber Wangi"
-                fill
-                className="object-contain"
-              />
-            </div>
-            <span className="text-xs uppercase tracking-[0.25em] text-[#d4af37] font-medium block">
-              CV SUMBER WANGI MADIUN GROUP
-            </span>
-          </div>
+          <span className="text-xs uppercase tracking-[0.25em] text-[#d4af37] font-medium block">
+            CV SUMBER WANGI MADIUN GROUP
+          </span>
 
           <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight text-[#f2f0ea] leading-tight">
             Seni meracik wewangian dengan ketulusan dan ketahanan abadi.
@@ -62,13 +52,13 @@ export default function TentangPage() {
             </p>
           </div>
 
-          <div className="md:col-span-6">
-            <div className="relative aspect-4/3 w-full overflow-hidden bg-[#141414] border border-[#262420]">
+          <div className="md:col-span-6 flex items-center justify-center py-6">
+            <div className="relative w-64 h-64 sm:w-80 sm:h-80">
               <Image
-                src="/images/products/oud-royale.jpg"
-                alt="Sumber Wangi Perfumery"
+                src="/images/logo.png"
+                alt="Logo Resmi CV Sumber Wangi Madiun Group"
                 fill
-                className="object-cover opacity-95"
+                className="object-contain"
               />
             </div>
           </div>
