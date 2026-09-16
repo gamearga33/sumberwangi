@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '@/lib/types';
 import { formatRupiah } from '@/lib/utils';
-import { getProductImageUrl } from '@/lib/pocketbase';
+import { getProductImageUrl } from '@/lib/products';
 import { WhatsAppButton } from './WhatsAppButton';
 
 interface ProductCardProps {

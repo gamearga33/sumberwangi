@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowUpRight } from 'lucide-react';
-import { getProductBySlug, getAvailableProducts, getProductImageUrl } from '@/lib/pocketbase';
+import { getProductBySlug, getAvailableProducts, getProductImageUrl } from '@/lib/products';
 import { formatRupiah } from '@/lib/utils';
 import { WhatsAppButton } from '@/components/WhatsAppButton';
 import { getWhatsAppConsultationUrl } from '@/lib/whatsapp';

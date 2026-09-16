@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
-import { getFeaturedProducts } from '@/lib/pocketbase';
+import { getFeaturedProducts } from '@/lib/products';
 import { ProductCard } from '@/components/ProductCard';
 import { ErrorMessage } from '@/components/ErrorMessage';
 import { getWhatsAppConsultationUrl } from '@/lib/whatsapp';
